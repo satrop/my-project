@@ -1,0 +1,965 @@
+html {
+  height: 100%;
+  background-color: #f4f3f3;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #f4f3f3;
+}
+
+:root {
+  --site-max-width: 2500px;
+  --main-content-max-width: 1400px;
+  --wide-content-max-width: 1900px;
+  --grid-gap: 1rem;
+  --grid-margin: clamp(30px - 1rem, 7vw - 1rem, 144px - 1rem);
+}
+
+// Mixin for container width modifiers
+@mixin container-width-modifiers($full-start: full-start, $full-end: full-end, $wide-start: wide-start, $wide-end: wide-end, $main-start: main-start, $main-end: main-end) {
+  &--full {
+    grid-column: #{$full-start} / #{$full-end};
+  }
+
+  &--wide {
+    grid-column: #{$wide-start} / #{$wide-end};
+
+    @include desktop-down {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &--main {
+    grid-column: #{$main-start} / #{$main-end};
+
+    @include desktop-down {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// Mixin for breakout tray containers
+@mixin breakout-container($default-span: "1 / -1") {
+  // Default: span all available columns in the breakout area
+  grid-column: #{$default-span};
+
+  @include container-width-modifiers();
+}
+
+// Responsive breakpoint mixins
+@mixin mobile-down {
+  @media (width < 768px) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (width >=768px) {
+    @content;
+  }
+}
+
+@mixin desktop-up {
+  @media (width >=1024px) {
+    @content;
+  }
+}
+
+@mixin desktop-down {
+  @media (width < 1024px) {
+    @content;
+  }
+}
+
+// ----------------------------------------------
+// Page grid container
+// ----------------------------------------------
+.ast-page-grid {
+  display: grid;
+  margin-inline: auto;
+  max-width: var(--site-max-width);
+  grid-template: auto 1fr auto/minmax(0, 1fr);
+  grid-template-areas:
+    "header"
+    "main  "
+    "footer";
+  min-height: 100%;
+  position: relative;
+  background-color: #fff;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+}
+
+// ----------------------------------------------
+// Grid area assignments
+// ----------------------------------------------
+header#header {
+  grid-area: header;
+}
+
+main#main {
+  grid-area: main;
+}
+
+footer#footer {
+  grid-area: footer;
+}
+
+// ----------------------------------------------
+// Base tray styles
+// ----------------------------------------------
+.ast-grid-wrapper {
+  overflow-x: clip;
+  display: grid;
+  column-gap: var(--grid-gap);
+  grid-template-columns:
+    [full-start] var(--grid-margin) [wide-start main-start] repeat(4, 1fr) [main-end wide-end] var(--grid-margin) [full-end];
+
+  @include tablet-up {
+    grid-template-columns:
+      [full-start] var(--grid-margin) [wide-start main-start] repeat(8, 1fr) [main-end wide-end] var(--grid-margin) [full-end];
+  }
+
+  @include desktop-up {
+    grid-template-columns:
+      [full-start] var(--grid-margin) [wide-start] repeat(1, minmax(50px, 1fr)) [main-start] repeat(12, minmax(0, calc(var(--main-content-max-width) / 12))) [main-end] repeat(1, minmax(50px, 1fr)) [wide-end] var(--grid-margin) [full-end];
+  }
+
+  // ----------------------------------------------
+  // CENTERED LAYOUT - Base tray system for layouts without sidebars
+  // Supports: --break-left, --break-right, --break-wide-left, --break-wide-right, --wide, --full
+  // Each breakout supports: --main, --wide, --full content width modifiers
+  // ----------------------------------------------
+  .ast-tray {
+    // Default: regular tray that doesn't break out
+    grid-column: main-start / main-end;
+
+    // Make all trays grid containers for consistent inner layout
+    display: grid;
+    grid-template-columns: subgrid;
+
+    .ast-container {
+      // Default: span all available columns
+      grid-column: 1 / -1;
+
+      // Content width modifiers
+      @include container-width-modifiers();
+    }
+
+    // Break left variant
+    &--break-left {
+      grid-column: full-start / main-end;
+
+      .ast-container {
+        @include breakout-container();
+
+        // Override width modifiers for left breakout
+        &--full {
+          grid-column: full-start / main-end;
+        }
+
+        &--wide {
+          grid-column: wide-start / main-end;
+        }
+
+        &--main {
+          grid-column: main-start / main-end;
+        }
+      }
+    }
+
+    // Break right variant
+    &--break-right {
+      grid-column: main-start / full-end;
+
+      .ast-container {
+        @include breakout-container();
+
+        // Override width modifiers for right breakout
+        &--full {
+          grid-column: main-start / full-end;
+        }
+
+        &--wide {
+          grid-column: main-start / wide-end;
+        }
+
+        &--main {
+          grid-column: main-start / main-end;
+        }
+      }
+    }
+
+    // Break wide left variant
+    &--break-wide-left {
+      grid-column: wide-start / main-end;
+
+      .ast-container {
+        @include breakout-container();
+
+        // Override width modifiers for wide left breakout
+        &--full {
+          grid-column: wide-start / main-end;
+        }
+
+        &--wide {
+          grid-column: wide-start / main-end;
+        }
+
+        &--main {
+          grid-column: main-start / main-end;
+        }
+      }
+    }
+
+    // Break wide right variant
+    &--break-wide-right {
+      grid-column: main-start / wide-end;
+
+      .ast-container {
+        @include breakout-container();
+
+        // Override width modifiers for wide right breakout
+        &--full {
+          grid-column: main-start / wide-end;
+        }
+
+        &--wide {
+          grid-column: main-start / wide-end;
+        }
+
+        &--main {
+          grid-column: main-start / main-end;
+        }
+      }
+    }
+
+    // Break wide variant (wide-start to wide-end) - extends on both sides to wide boundaries
+    &--wide {
+      grid-column: wide-start / wide-end;
+
+      .ast-container {
+        @include breakout-container();
+
+        // Override width modifiers for wide breakout (both sides)
+        &--full {
+          grid-column: wide-start / wide-end;
+        }
+
+        &--wide {
+          grid-column: wide-start / wide-end;
+        }
+
+        &--main {
+          grid-column: main-start / main-end;
+        }
+      }
+    }
+
+    // Break full variant (full-start to full-end) - extends on both sides to full boundaries  
+    &--full {
+      grid-column: full-start / full-end;
+
+      .ast-container {
+        @include breakout-container();
+
+        // Override width modifiers for full breakout (both sides)
+        &--full {
+          grid-column: full-start / full-end;
+        }
+
+        &--wide {
+          grid-column: wide-start / wide-end;
+        }
+
+        &--main {
+          grid-column: main-start / main-end;
+        }
+      }
+    }
+  }
+
+  &--left-sidebar {
+    // Create enough explicit rows to handle multiple breakout elements
+    grid-template-rows: repeat(10, auto);
+
+    .ast-left-column {
+      // Span all 10 rows to ensure full height coverage
+      // grid-row: 1 / 11;
+      grid-row: 1 / -1;
+
+      // Ensure it's a flex container to stretch content
+      display: flex;
+      flex-direction: column;
+
+      // Responsive column sizing
+      grid-column: main-start / main-end;
+
+      @media(width >=1024px) {
+        grid-column: main-start / span 3;
+      }
+    }
+
+    // Base tray styles - applies to all trays
+    .ast-tray {
+      // Default: regular tray that doesn't break out
+      // Responsive positioning - starts at content area
+      grid-column: main-start / main-end;
+
+      @media(width >=1024px) {
+        grid-column: 6 / main-end;
+      }
+
+      // Make all trays grid containers for consistent inner layout
+      display: grid;
+      grid-template-columns: subgrid;
+
+      .ast-container {
+        // Default: span all available columns
+        grid-column: 1 / -1;
+      }
+
+      // Break right variant
+      &--break-right {
+        // Extend to full-end for breakout effect
+        grid-column: main-start / full-end;
+
+        @media(width >=1024px) {
+          grid-column: 6 / full-end;
+        }
+
+        .ast-container {
+          // Span only 9 columns from the current position
+          grid-column: 1 / span 9;
+
+          @media(width < 768px) {
+            // On smaller screens, just span what's available
+            grid-column: 1 / -1;
+          }
+
+          @media(width >=768px) {
+            grid-column: 1 / span 9;
+          }
+
+          @media(width >=1024px) {
+            grid-column: 1 / span 9;
+          }
+
+          // Full width: span entire breakout area
+          &--full {
+            grid-column: 1 / -1;
+          }
+
+          // Wide width: span to wide boundary using inherited named lines
+          &--wide {
+            // Try to use inherited named line from parent grid
+            grid-column: 1 / wide-end;
+
+            // Fallback for smaller screens
+            @media(width < 1024px) {
+              grid-column: 1 / -1;
+            }
+          }
+
+          // Main width: content constrained from column 6 to main-end
+          &--main {
+            // Since the breakout starts at column 6 and goes to full-end,
+            // we want content to span from the beginning (column 6) to main-end
+            // This means relative to the breakout's start, we go from 1 to main-end
+            grid-column: 1 / main-end;
+
+            // But we need to account for the offset - the content should appear
+            // as if it's positioned from absolute column 6 to main-end
+            // Since breakout starts at column 6, this works correctly
+
+            @media(width < 768px) {
+              grid-column: 1 / -1;
+            }
+
+            @media(width >=768px) {
+              grid-column: 1 / main-end;
+            }
+
+            @media(width >=1024px) {
+              // On large screens: content spans from relative position 1 to main-end
+              // Since parent starts at column 6, this gives us 6 / main-end effectively
+              grid-column: 1 / main-end;
+            }
+          }
+        }
+      }
+
+      // Break wide right variant
+      &--break-wide-right {
+        // Extend from content start to wide-end
+        grid-column: 3 / wide-end;
+
+        @media(width >=768px) {
+          grid-column: 4 / wide-end;
+        }
+
+        @media(width >=1024px) {
+          grid-column: 6 / wide-end;
+        }
+
+        .ast-container {
+          // Span only 9 columns from the current position
+          grid-column: 1 / span 9;
+
+          @media(width < 768px) {
+            grid-column: 1 / -1;
+          }
+
+          @media(width >=768px) {
+            grid-column: 1 / span 9;
+          }
+
+          @media(width >=1024px) {
+            grid-column: 1 / span 9;
+          }
+
+          // Full width: span entire breakout area
+          &--full {
+            grid-column: 1 / -1;
+          }
+
+          // Wide width: span to wide boundary
+          &--wide {
+            grid-column: 1 / wide-end;
+
+            @media(width < 1024px) {
+              grid-column: 1 / -1;
+            }
+          }
+
+          // Main width: span to main boundary
+          &--main {
+            grid-column: 1 / main-end;
+
+            @media(width < 768px) {
+              grid-column: 1 / -1;
+            }
+
+            @media(width >=768px) {
+              grid-column: 1 / main-end;
+            }
+
+            @media(width >=1024px) {
+              grid-column: 1 / main-end;
+            }
+          }
+        }
+      }
+
+      // Break left variant (for future use)
+      &--break-left {
+        // Extend from main-start to where content normally starts
+        grid-column: main-start / 6;
+
+        @media(width >=768px) {
+          grid-column: main-start / 4;
+        }
+
+        @media(width >=1024px) {
+          grid-column: main-start / 6;
+        }
+
+        .ast-container {
+          // Position content in the available space
+          grid-column: 1 / -1;
+        }
+      }
+
+      // Wide bilateral variant - cuts across sidebar and extends to wide boundaries
+      &--wide {
+        grid-column: wide-start / wide-end;
+
+        .ast-container {
+          @include breakout-container();
+
+          // Override width modifiers for wide bilateral breakout
+          &--full {
+            grid-column: wide-start / wide-end;
+          }
+
+          &--wide {
+            grid-column: wide-start / wide-end;
+          }
+
+          &--main {
+            grid-column: main-start / main-end;
+          }
+        }
+      }
+
+      // Full bilateral variant - cuts across sidebar and extends to full boundaries
+      &--full {
+        grid-column: full-start / full-end;
+
+        .ast-container {
+          @include breakout-container();
+
+          // Override width modifiers for full bilateral breakout
+          &--full {
+            grid-column: full-start / full-end;
+          }
+
+          &--wide {
+            grid-column: wide-start / wide-end;
+          }
+
+          &--main {
+            grid-column: main-start / main-end;
+          }
+        }
+      }
+    }
+  }
+
+  &--right-sidebar {
+    // Create enough explicit rows to handle multiple breakout elements
+    grid-template-rows: repeat(10, auto);
+
+    .ast-right-column {
+      // Span all 10 rows to ensure full height coverage
+      // grid-row: 1 / 11;
+      grid-row: 1 / -1;
+
+      // Ensure it's a flex container to stretch content
+      display: flex;
+      flex-direction: column;
+
+      // Position at specific columns from the right
+      grid-column: main-start / main-end;
+
+      @media(width >=1024px) {
+        grid-column: 12 / main-end;
+      }
+    }
+
+    // Base tray styles - applies to all trays
+    .ast-tray {
+      // Default: regular tray that doesn't break out
+      // Position in the content area (before the sidebar)
+      grid-column: main-start / main-end;
+
+      @media(width >=768px) {
+        grid-column: main-start / span 8;
+      }
+
+      @media(width >=1024px) {
+        grid-column: main-start / span 9;
+      }
+
+      // Make all trays grid containers for consistent inner layout
+      display: grid;
+      grid-template-columns: subgrid;
+
+      .ast-container {
+        // Default: span all available columns
+        grid-column: 1 / -1;
+      }
+
+      // Break left variant
+      &--break-left {
+        // Extend from full-start to where content normally ends (before sidebar)
+        grid-column: full-start / span 2;
+
+        @media(width >=768px) {
+          grid-column: full-start / span 5;
+        }
+
+        @media(width >=1024px) {
+          grid-column: full-start / span 11;
+        }
+
+        .ast-container {
+          // Span only 9 columns from the current position
+          grid-column: span 9 / -1;
+
+          @media(width < 768px) {
+            // On smaller screens, just span what's available
+            grid-column: 1 / -1;
+          }
+
+          @media(width >=768px) {
+            grid-column: span 9 / -1;
+          }
+
+          @media(width >=1024px) {
+            grid-column: span 9 / -1;
+          }
+
+          // Full width: span entire breakout area
+          &--full {
+            grid-column: 1 / -1;
+          }
+
+          // Wide width: span from wide boundary
+          &--wide {
+            grid-column: wide-start / -1;
+
+            // Fallback for smaller screens
+            @media(width < 1024px) {
+              grid-column: 1 / -1;
+            }
+          }
+
+          // Main width: content constrained to main area
+          &--main {
+            grid-column: main-start / -1;
+
+            @media(width < 768px) {
+              grid-column: 1 / -1;
+            }
+
+            @media(width >=768px) {
+              grid-column: main-start / -1;
+            }
+
+            @media(width >=1024px) {
+              grid-column: main-start / -1;
+            }
+          }
+        }
+      }
+
+      // Break wide left variant  
+      &--break-wide-left {
+        // Extend from wide-start to where content normally ends (before sidebar)
+        grid-column: wide-start / span 2;
+
+        @media(width >=768px) {
+          grid-column: wide-start / span 5;
+        }
+
+        @media(width >=1024px) {
+          grid-column: wide-start / span 10;
+        }
+
+        .ast-container {
+          // Same container options as break-left
+          grid-column: span 9 / -1;
+
+          @media(width < 768px) {
+            grid-column: 1 / -1;
+          }
+
+          @media(width >=768px) {
+            grid-column: span 9 / -1;
+          }
+
+          @media(width >=1024px) {
+            grid-column: span 9 / -1;
+          }
+
+          // Full width: span entire breakout area
+          &--full {
+            grid-column: 1 / -1;
+          }
+
+          // Wide width: span from wide boundary
+          &--wide {
+            grid-column: wide-start / -1;
+
+            @media(width < 1024px) {
+              grid-column: 1 / -1;
+            }
+          }
+
+          // Main width: content constrained to main area
+          &--main {
+            grid-column: main-start / -1;
+
+            @media(width < 768px) {
+              grid-column: 1 / -1;
+            }
+
+            @media(width >=768px) {
+              grid-column: main-start / -1;
+            }
+
+            @media(width >=1024px) {
+              grid-column: main-start / -1;
+            }
+          }
+        }
+      }
+
+      // Break right variant  
+      &--break-right {
+        // Extend from content start to full-end (over the sidebar)
+        grid-column: main-start / full-end;
+
+        @media(width >=768px) {
+          grid-column: main-start / full-end;
+        }
+
+        @media(width >=1024px) {
+          grid-column: main-start / full-end;
+        }
+
+        .ast-container {
+          // Span only 9 columns from the start
+          grid-column: 1 / span 9;
+
+          @media(width < 768px) {
+            grid-column: 1 / -1;
+          }
+
+          @media(width >=768px) {
+            grid-column: 1 / span 9;
+          }
+
+          @media(width >=1024px) {
+            grid-column: 1 / span 9;
+          }
+
+          // Full width: span entire breakout area
+          &--full {
+            grid-column: 1 / -1;
+          }
+
+          // Wide width: span to wide boundary
+          &--wide {
+            grid-column: 1 / wide-end;
+
+            @media(width < 1024px) {
+              grid-column: 1 / -1;
+            }
+          }
+
+          // Main width: span to main boundary
+          &--main {
+            grid-column: 1 / main-end;
+
+            @media(width < 768px) {
+              grid-column: 1 / -1;
+            }
+
+            @media(width >=768px) {
+              grid-column: 1 / main-end;
+            }
+
+            @media(width >=1024px) {
+              grid-column: 1 / main-end;
+            }
+          }
+        }
+      }
+
+      // Wide bilateral variant - cuts across sidebar and extends to wide boundaries
+      &--wide {
+        grid-column: wide-start / wide-end;
+
+        .ast-container {
+          @include breakout-container();
+
+          // Override width modifiers for wide bilateral breakout
+          &--full {
+            grid-column: wide-start / wide-end;
+          }
+
+          &--wide {
+            grid-column: wide-start / wide-end;
+          }
+
+          &--main {
+            grid-column: main-start / main-end;
+          }
+        }
+      }
+
+      // Full bilateral variant - cuts across sidebar and extends to full boundaries
+      &--full {
+        grid-column: full-start / full-end;
+
+        .ast-container {
+          @include breakout-container();
+
+          // Override width modifiers for full bilateral breakout
+          &--full {
+            grid-column: full-start / full-end;
+          }
+
+          &--wide {
+            grid-column: wide-start / wide-end;
+          }
+
+          &--main {
+            grid-column: main-start / main-end;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+.ast-full-wrapper {
+  grid-column: full-start / full-end;
+}
+
+.ast-main-wrapper {
+  grid-column: main-start / main-end;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: var(--grid-gap);
+
+  @media (width >=768px) {
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  @media (width >=1024px) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+
+
+// Subgrid utility for sections that span wider but want content aligned to main
+.ast-subgrid-to-main,
+footer#footer {
+  display: grid;
+  grid-template-columns: subgrid;
+
+  &>* {
+    grid-column: main-start / main-end;
+
+  }
+
+  &.ast-left-content,
+  &.ast-right-content {
+    &>* {
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      column-gap: var(--grid-gap);
+
+      @media (width >=768px) {
+        grid-template-columns: repeat(8, 1fr);
+      }
+
+      @media (width >=1024px) {
+        grid-template-columns: repeat(12, 1fr);
+      }
+    }
+  }
+}
+
+// ----------------------------------------------
+// Right Column Setup
+// ----------------------------------------------
+.ast-right-content {
+
+  .ast-right-column {
+    order: 1;
+  }
+
+  .ast-left-column {
+    order: 2;
+  }
+
+  @media (width >=1024px) {
+    .ast-right-column {
+      order: 2;
+    }
+
+    .ast-left-column {
+      order: 1;
+    }
+  }
+}
+
+// ----------------------------------------------
+// Grid Item Utilities 
+// ----------------------------------------------
+@for $i from 1 through 4 {
+  .ast-span-#{$i} {
+    grid-column: span #{$i};
+  }
+}
+
+@media (width >=768px) {
+  @for $i from 1 through 8 {
+    .md\:ast-span-#{$i} {
+      grid-column: span #{$i};
+    }
+  }
+}
+
+@media (width >=1024px) {
+  @for $i from 1 through 12 {
+    .lg\:ast-span-#{$i} {
+      grid-column: span #{$i};
+    }
+  }
+}
+
+.ast-span-full,
+.ast-span-12 {
+  grid-column: 1 / -1;
+}
+
+// ----------------------------------------------
+// Variables
+// ----------------------------------------------
+.ast-main-wrapper {
+
+  &.ast-left-content,
+  &.ast-right-content {
+    @media (width >=1024px) {
+      grid-column: wide-start / wide-end;
+    }
+
+    @media (width >=1400px) {
+      grid-column: main-start / main-end;
+    }
+  }
+}
+
+.ast-wide-wrapper {
+  grid-column: wide-start / wide-end;
+
+  &.ast-left-content,
+  &.ast-right-content {
+    max-width: var(--wide-content-max-width);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: var(--grid-gap);
+
+    @media (width >=768px) {
+      grid-template-columns: repeat(8, 1fr);
+    }
+
+    @media (width >=1024px) {
+      grid-template-columns: repeat(12, 1fr);
+    }
+  }
+
+  &--end-main {
+    grid-column: wide-start / main-end;
+  }
+
+}
+
+.ast-breakout {
+  &--full-left {
+    grid-column: full-start / main-end;
+  }
+
+  &--full-right {
+    grid-column: main-start / full-end;
+  }
+
+  &--wide-left {
+    grid-column: wide-start / main-end;
+  }
+
+  &--wide-right {
+    grid-column: main-start / wide-end;
+  }
+}

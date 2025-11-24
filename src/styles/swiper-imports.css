@@ -1,0 +1,4 @@
+/* Swiper CSS imports - separate file to avoid SCSS @use/@import conflicts */
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";

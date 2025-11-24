@@ -1,0 +1,78 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# Welcome to Storybook
+
+Storybook is now set up for your AST Boilerplate project!
+
+## What is Storybook?
+
+Storybook is a tool for developing and testing UI components in isolation. It helps you:
+- Build components independently from your app
+- Test different component states
+- Document components with examples
+- Share components with your team
+
+## Getting Started
+
+### Running Storybook
+
+Start the Storybook development server:
+
+```bash
+pnpm run storybook
+```
+
+This will start Storybook on [http://localhost:6006](http://localhost:6006)
+
+### Building Storybook
+
+Build a static version of Storybook:
+
+```bash
+pnpm run build-storybook
+```
+
+## Creating Stories
+
+Since this project uses Astro components, you'll need to:
+
+1. **Render the HTML structure** - Astro components are compiled to HTML, so in Storybook we recreate that HTML structure
+2. **Apply styles** - Import component-specific styles in your story files
+3. **Initialize JavaScript** - If your component has interactive behavior, you'll need to initialize it
+
+### Example Story Structure
+
+```javascript
+export default {
+  title: 'Components/MyComponent',
+  tags: ['autodocs'],
+};
+
+const Template = (args) => {
+  return `
+    <div class="my-component">
+      {/* Component HTML here */}
+    </div>
+  `;
+};
+
+export const Default = Template.bind({});
+Default.args = {
+  // Component props/args here
+};
+```
+
+## Example Components
+
+Check out the **Accordion** component story to see how an existing component has been set up in Storybook.
+
+## Next Steps
+
+1. Create stories for your other components
+2. Test component variations and edge cases
+3. Document component APIs with controls
+4. Share your component library with the team
+
+Happy building! 🚀

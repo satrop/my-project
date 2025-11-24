@@ -1,0 +1,68 @@
+---
+const { links = [] } = Astro.props;
+---
+
+<ul class="ast-link-list ast-link-list--homepage">
+  {
+    links.map((link) => (
+      <li class={`ast-link-list__item${link.className ? ` ast-${link.className}` : ""}`}>
+        <a href={link.url}>{link.name}</a>
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  .ast-link-list {
+    &--homepage {
+      padding: 0;
+      gap: 1rem;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      @media (width >= 768px) {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .ast-link-list__item {
+        position: relative;
+        padding-right: 20px;
+        display: flex;
+        gap: 0.5rem;
+        flex-direction: row;
+        width: 100%;
+
+        @media (width >= 768px) {
+          flex-wrap: wrap;
+          width: 32.333%;
+        }
+
+        &.ast-started {
+          &::before {
+            content: "🛠️";
+          }
+        }
+
+        &.ast-no {
+          pointer-events: none;
+
+          a {
+            opacity: 0.5;
+          }
+
+          &::before {
+            content: "❌";
+          }
+        }
+
+        &.ast-done {
+          &::before {
+            content: "✅";
+          }
+        }
+      }
+    }
+  }
+</style>

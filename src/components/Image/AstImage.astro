@@ -1,0 +1,86 @@
+---
+/**
+ * AstImage Component
+ *
+ * A clean image system with common aspect ratios and object positioning.
+ * Prevents layout shift by maintaining container dimensions while images load.
+ *
+ * BASIC USAGE:
+ * <AstImage src="hero.jpg" alt="Hero image" />
+ * // Creates a 16:9 image (default) that fills its container
+ * // Just pass the filename - img/ path is handled automatically!
+ *
+ * COMMON ASPECT RATIOS (via props):
+ * <AstImage src="hero.jpg" alt="Hero" aspectRatio="1/1" />        // Square
+ * <AstImage src="hero.jpg" alt="Hero" aspectRatio="4/3" />        // Standard photo
+ * <AstImage src="hero.jpg" alt="Hero" aspectRatio="3/4" />        // Portrait
+ * <AstImage src="hero.jpg" alt="Hero" aspectRatio="21/9" />       // Ultra-wide
+ *
+ * OBJECT FIT & POSITION:
+ * <AstImage
+ *   src="hero.jpg"
+ *   alt="Hero"
+ *   objectFit="contain"      // contain | fill | scale-down | none
+ *   objectPosition="top"     // top | bottom | left | right
+ * />
+ *
+ * FOR CUSTOM VALUES: Use CSS custom properties directly
+ * <AstImage src="hero.jpg" alt="Hero" class="custom-image" />
+ *
+ * .custom-image {
+ *   --ast-container-width: 325px;     // Any width
+ *   --ast-aspect-ratio: 7/3;          // Any custom ratio
+ *   --ast-object-position: 25% 75%;   // Any position value
+ * }
+ */
+
+import { Image } from "astro:assets";
+import { asset } from "@/utils/assets";
+
+export interface Props {
+  src: string;
+  alt: string;
+  aspectRatio?: "1/1" | "4/3" | "3/4" | "21/9" | "3/2" | "2/3";
+  class?: string;
+  imageClass?: string;
+  loading?: "lazy" | "eager";
+  objectFit?: "contain" | "fill" | "scale-down" | "none";
+  objectPosition?: "top" | "bottom" | "left" | "right" | "center";
+  width?: number;
+  height?: number;
+  [key: string]: any;
+}
+
+const {
+  src,
+  alt,
+  aspectRatio,
+  class: className = "",
+  imageClass = "",
+  loading = "lazy",
+  objectFit,
+  objectPosition,
+  width = 800,
+  height = 600,
+  ...rest
+} = Astro.props;
+
+// Generate the proper asset URL using your existing utility
+const imageSrc = asset(`img/${src}`);
+---
+
+<div
+  class={`ast-image-container ${className}`}
+  data-aspect-ratio={aspectRatio}
+  data-object-fit={objectFit}
+  data-object-position={objectPosition}>
+  <Image
+    src={imageSrc}
+    alt={alt}
+    width={width}
+    height={height}
+    class={`ast-image ${imageClass}`}
+    loading={loading}
+    {...rest}
+  />
+</div>

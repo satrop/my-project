@@ -1,0 +1,41 @@
+// ==========================================================================
+// Animation Styles Index
+// ==========================================================================
+// Custom build of animate.css animations
+// Comment/uncomment the animations you want to include in your build
+
+// Base animation styles (always include this)
+@use "./animation--base";
+
+// ==========================================================================
+// Active Animations (Uncommented - will be included in build)
+// ==========================================================================
+
+// Fade animations
+@use "./animation--fadeIn";
+@use "./animation--fadeInUp";
+@use "./animation--fadeInDown";
+@use "./animation--fadeInLeft";
+@use "./animation--fadeInRight";
+
+// ==========================================================================
+// Available Animations (Commented out - uncomment to include)
+// ==========================================================================
+
+// Slide animations
+// @use "./animation--slideInUp";
+// @use "./animation--slideInDown";
+// @use "./animation--slideInLeft";
+// @use "./animation--slideInRight";
+
+// Zoom animations
+// @use "./animation--zoomIn";
+// @use "./animation--zoomInUp";
+
+// Bounce animations
+// @use "./animation--bounce";
+// @use "./animation--bounceIn";
+
+// Other animations
+// @use "./animation--flip";
+// @use "./animation--pulse";

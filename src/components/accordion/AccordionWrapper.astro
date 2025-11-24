@@ -1,0 +1,19 @@
+---
+import { getAnimationClass, type AnimationProps } from "@/utils/animationHelpers";
+
+export interface Props extends AnimationProps {
+  allowMultiple?: boolean;
+  variant?: "default" | "bordered" | "flush";
+  className?: string;
+}
+
+const { allowMultiple = false, variant = "default", className, animate = false } = Astro.props;
+---
+
+<div
+  class={`ast-accordion ast-accordion--${variant}${className ? ` ${className}` : ""}`}
+  data-allow-multiple={allowMultiple.toString()}
+  data-js="accordion"
+  data-animate={getAnimationClass(animate)}>
+  <slot />
+</div>

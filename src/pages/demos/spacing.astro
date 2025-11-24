@@ -1,0 +1,324 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+import { standardSpacing, specialSpacing } from "@/data/spacing-data";
+---
+
+<Layout title="Spacing System" pageClass="ast-centered-page" layoutType="centered">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="centered-content">
+    <AstTray>
+      <h1>Spacing System</h1>
+      <p>
+        Our design system includes {standardSpacing.length} standard spacing tokens and {specialSpacing.length} special spacing
+        tokens with responsive values across breakpoints.
+      </p>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-spacing-section">
+        <h2 class="ast-spacing-section__title">Standard Spacing Tokens</h2>
+        <div class="ast-spacing-grid">
+          {
+            standardSpacing.map((spacing) => (
+              <div class="ast-spacing-item">
+                <div class="ast-spacing-visual">
+                  <div class="ast-spacing-box" style={`width: ${spacing.values.lg}; height: ${spacing.values.lg};`} />
+                </div>
+                <div class="ast-spacing-info">
+                  <div class="ast-spacing-name">{spacing.name}</div>
+                  <div class="ast-spacing-description">{spacing.description}</div>
+                  <div class="ast-spacing-values">
+                    <div class="ast-spacing-value">
+                      <span class="ast-spacing-bp">sm:</span> {spacing.values.sm}
+                    </div>
+                    <div class="ast-spacing-value">
+                      <span class="ast-spacing-bp">md:</span> {spacing.values.md}
+                    </div>
+                    <div class="ast-spacing-value">
+                      <span class="ast-spacing-bp">lg:</span> {spacing.values.lg}
+                    </div>
+                  </div>
+                  <div class="ast-spacing-usage">
+                    <div class="ast-spacing-css">
+                      <code>.ast-spacing-{spacing.name}</code>
+                    </div>
+                    <div class="ast-spacing-css">
+                      <code>--spacing-{spacing.name}</code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-spacing-section">
+        <h2 class="ast-spacing-section__title">Special Spacing Tokens</h2>
+        <div class="ast-spacing-grid ast-spacing-grid--special">
+          {
+            specialSpacing.map((spacing) => (
+              <div class="ast-spacing-item ast-spacing-item--special">
+                <div class="ast-spacing-visual ast-spacing-visual--wide">
+                  <div
+                    class="ast-spacing-bar"
+                    style={`width: ${spacing.values.xl || spacing.values.lg}; height: ${spacing.values.lg};`}
+                  />
+                </div>
+                <div class="ast-spacing-info">
+                  <div class="ast-spacing-name">{spacing.name}</div>
+                  <div class="ast-spacing-description">{spacing.description}</div>
+                  <div class="ast-spacing-values">
+                    {Object.entries(spacing.values).map(([bp, value]) => (
+                      <div class="ast-spacing-value">
+                        <span class="ast-spacing-bp">{bp}:</span> {value}
+                      </div>
+                    ))}
+                  </div>
+                  <div class="ast-spacing-usage">
+                    <div class="ast-spacing-css">
+                      <code>.ast-spacing-{spacing.name}</code>
+                    </div>
+                    <div class="ast-spacing-css">
+                      <code>--spacing-{spacing.name}</code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-spacing-section">
+        <h3>CSS Usage Examples</h3>
+        <pre
+          class="ast-code-example"><code>{`/* PRIMARY METHOD: Spacing Mixin (Recommended) */
+@use "../../styles/core/spacing.core" as *;
+
+.my-component {
+  // CSS-like shorthand syntax with automatic responsive behavior
+  @include spacing(margin, 32);              // All sides: 32px token
+  @include spacing(padding, 16, 24);         // Vertical: 16px, Horizontal: 24px
+  @include spacing(margin, 8, 16, 12);       // Top: 8px, Horizontal: 16px, Bottom: 12px
+  @include spacing(padding, 8, 16, 12, 20);  // Top, Right, Bottom, Left
+}
+
+.hero-section {
+  @include spacing(margin, -16, 0, 32);      // Negative top, zero horizontal, positive bottom
+  @include spacing(padding, 48);             // Large padding on all sides
+}
+
+.card-layout {
+  @include spacing(margin, vertical-MD);     // Special token for consistent vertical rhythm
+  @include spacing(padding, 24, main-margins); // Mix standard and special tokens
+}
+
+/* SECONDARY METHOD: CSS Custom Properties (for rare cases) */
+.utility-example {
+  margin-bottom: var(--spacing-32-lg);      // Direct variable access
+  gap: var(--spacing-column-gap-md);        // Grid gaps
+}
+
+/* WHY USE THE MIXIN? */
+// ✅ Automatic responsive behavior across all breakpoints
+// ✅ Familiar CSS shorthand syntax (1, 2, 3, or 4 values)
+// ✅ Supports negative values with intuitive -token syntax
+// ✅ Type checking and error handling for invalid tokens
+// ✅ Cleaner, more maintainable code`}</code></pre>
+      </section>
+    </AstTray>
+  </Fragment>
+</Layout>
+
+<style lang="scss">
+  .ast-spacing-section__title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--neutral-800, #000);
+    border-bottom: 2px solid var(--neutral-100, #e4dcd3);
+    padding-bottom: 0.5rem;
+  }
+
+  .ast-spacing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+
+    &--special {
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    }
+  }
+
+  .ast-spacing-item {
+    border: 1px solid var(--neutral-200, #c1b2a5);
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    &--special {
+      .ast-spacing-visual {
+        background:
+          linear-gradient(45deg, #f8f9fa 25%, transparent 25%), linear-gradient(-45deg, #f8f9fa 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #f8f9fa 75%), linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
+        background-size: 10px 10px;
+        background-position:
+          0 0,
+          0 5px,
+          5px -5px,
+          -5px 0px;
+      }
+    }
+  }
+
+  .ast-spacing-visual {
+    padding: 1.5rem;
+    background: var(--neutral-50, #f4f0eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+
+    &--wide {
+      min-height: 80px;
+    }
+  }
+
+  .ast-spacing-box {
+    background: var(--teal-200, #009999);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  .ast-spacing-bar {
+    background: var(--rust-300, #b91414);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    min-height: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .ast-spacing-inner {
+    font-size: 0.9rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .ast-spacing-info {
+    padding: 1.5rem;
+  }
+
+  .ast-spacing-name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--neutral-800, #000);
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+  }
+
+  .ast-spacing-description {
+    color: var(--neutral-600, #363639);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .ast-spacing-values {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .ast-spacing-value {
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+    font-size: 0.85rem;
+    background: var(--neutral-100, #e4dcd3);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .ast-spacing-bp {
+    font-weight: 600;
+    color: var(--orange-300, #cd6607);
+  }
+
+  .ast-spacing-usage {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ast-spacing-css {
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+    font-size: 0.8rem;
+
+    code {
+      background: var(--neutral-800, #000);
+      color: var(--neutral-50, #f4f0eb);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      display: inline-block;
+    }
+  }
+
+  .ast-code-example {
+    background: var(--neutral-800, #000);
+    color: var(--neutral-50, #f4f0eb);
+    padding: 1.5rem;
+    border-radius: 8px;
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-x: auto;
+
+    code {
+      color: inherit;
+      background: none;
+      padding: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ast-spacing-grid {
+      grid-template-columns: 1fr;
+
+      &--special {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ast-spacing-values {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ast-spacing-visual {
+      padding: 1rem;
+      min-height: 100px;
+    }
+  }
+</style>

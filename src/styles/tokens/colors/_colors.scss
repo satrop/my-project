@@ -1,0 +1,26 @@
+// Color map for use in stylesheets
+$colors: (
+  "teal": (50: #a3cccc,
+    100: #76cccc,
+    150: #10afaf,
+    15050: #76cccc80, // 50% opacity
+    15075: #76CCCCBF, // 75% opacity
+    200: #009999,
+    20050: #009999B3, // 50% opacity
+    250: #167f8a,
+    300: #006e79,
+    350: #00535c,
+    400: #005057,
+  ),
+  "neutral": (0: #ffffff,
+    50: #f4f0eb,
+    80: #e9e1d7,
+    100: #e4dcd3,
+    200: #c1b2a5,
+    300: #7b6f60,
+    400: #615546,
+    600: #363639,
+    800: #000000,
+  ),
+  "focus": (500: #007bff),
+);

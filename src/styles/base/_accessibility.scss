@@ -1,0 +1,63 @@
+// Reduce motion for accessibility
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// Ensure focus styles are visible
+:focus-visible {
+  outline: 2px solid var(--focus-outline-color, #005fcc);
+  outline-offset: 2px;
+}
+
+// Ensure high contrast mode styles are applied
+@media (prefers-contrast: high) {
+  :focus {
+    outline: 3px solid var(--focus-outline-color, #000);
+    outline-offset: 3px;
+  }
+}
+
+// Ensure text is readable in high contrast mode
+@media (prefers-contrast: high) {
+  body {
+    color: var(--high-contrast-text-color, #000);
+    background-color: var(--high-contrast-ast-bg-color, #fff);
+  }
+}
+
+
+// Ensure buttons have sufficient contrast in high contrast mode
+@media (forced-colors: active) {
+  .ast-btn {
+    border: 1px solid CanvasText;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+}
+
+// Ensure text rendering is optimized for legibility
+// This helps with readability, especially for users with visual impairments
+html {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Hide elements visually but keep them accessible to screen readers
+.ast-sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}

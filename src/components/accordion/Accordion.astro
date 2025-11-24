@@ -1,0 +1,190 @@
+---
+import { getAnimationClass, type AnimationProps } from "@/utils/animationHelpers";
+
+export interface AccordionItem {
+  id: string;
+  title: string;
+
+  // Optional plain text content
+  content?: string;
+
+  // Optional HTML content instead of plain text
+  htmlContent?: string;
+
+  // Optional: pre-rendered Astro component/content
+  children?: any;
+
+  // Optional nested accordion items
+  nestedItems?: AccordionItem[];
+
+  // Optional multiple nested accordion sections
+  nestedSections?: AccordionItem[][];
+  // Optional setting for nested accordion
+  nestedAllowMultiple?: boolean;
+
+  subTime?: string; 
+  subLocation?: string; 
+  subContent?: string; 
+}
+
+export interface Props extends AnimationProps {
+  items: AccordionItem[];
+  allowMultiple?: boolean;
+}
+
+const { items, allowMultiple = false, animate = false } = Astro.props;
+---
+
+<article class="ast-accordion" data-allow-multiple={allowMultiple.toString()} data-js="accordion" data-animate={getAnimationClass(animate)}>
+  {
+    items.map((item, index) => (
+      <div class="ast-accordion__item" data-accordion-item data-expanded="false">
+        <div class="ast-h3">
+          <button
+            class="ast-accordion__trigger"
+            type="button"
+            aria-expanded="false"
+            aria-controls={`ast-accordion-content-${item.id}`}
+            id={`ast-accordion-trigger-${item.id}`}
+            data-accordion-trigger>
+            <div class="ast-accordion__icon-wrapper">
+              <i class="icon icon-minus" aria-hidden="true" />
+              <i class="icon icon-plus" aria-hidden="true" />
+            </div>
+            <div class="ast-accordion__title">{item.title}</div>
+          </button>
+        </div>
+
+        <div
+          class="ast-accordion__content ast-accordion__left"
+          id={`ast-accordion-content-${item.id}`}
+          aria-labelledby={`ast-accordion-trigger-${item.id}`}
+          role="region"
+          data-accordion-content>
+          <div class="ast-accordion__body" inert>
+            {item.nestedSections ? (
+              <>
+                {item.content && <p set:html={item.content} />}
+                {item.htmlContent && <div set:html={item.htmlContent} />}
+                {item.nestedSections.map((section, sectionIndex) => (
+                  <article
+                    class="ast-accordion ast-accordion--nested"
+                    data-allow-multiple={(item.nestedAllowMultiple ?? false).toString()}
+                    data-js="accordion">
+                    {section.map((nestedItem) => (
+                      <div class="ast-accordion__item-header">
+                        <>
+                          {nestedItem.subContent && (
+                            <div class="ast-accordion__sub-content" set:html={nestedItem.subContent}></div>
+                          )}
+                        </>
+                      </div>
+                      <div class="ast-accordion__item" data-accordion-item data-expanded="false">
+                        <div class="ast-h3">
+                          <button
+                            class="ast-accordion__trigger"
+                            type="button"
+                            aria-expanded="false"
+                            aria-controls={`ast-accordion-content-${nestedItem.id}`}
+                            id={`ast-accordion-trigger-${nestedItem.id}`}
+                            data-accordion-trigger>
+                            <div class="ast-accordion__icon-wrapper">
+                              <i class="icon icon-minus" aria-hidden="true" />
+                              <i class="icon icon-plus" aria-hidden="true" />
+                            </div>
+                            <div class="ast-accordion__title">{nestedItem.title}</div>
+                          </button>
+                        </div>
+                        {/* Second layer of nesting */}
+                        <div
+                          class="ast-accordion__content"
+                          id={`ast-accordion-content-${nestedItem.id}`}
+                          aria-labelledby={`ast-accordion-trigger-${nestedItem.id}`}
+                          role="region"
+                          data-accordion-content>
+                          <div class="ast-accordion__body" inert>
+                            {nestedItem.htmlContent ? (
+
+                              <div set:html={nestedItem.htmlContent} />
+                            ) : nestedItem.content ? (
+                              <>
+                                <div set:html={nestedItem.content} />
+                              </>
+                            ) : null}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </article>
+                ))}
+              </>
+            ) : item.nestedItems ? (
+              <>
+                {item.content && <p set:html={item.content} />}
+                {item.htmlContent && <div set:html={item.htmlContent} />}
+                <article
+                  class="ast-accordion ast-accordion--nested"
+                  data-allow-multiple={(item.nestedAllowMultiple ?? false).toString()}
+                  data-js="accordion">
+                  {item.nestedItems.map((nestedItem) => (
+                    <div class="ast-accordion__item-header">
+                      <>
+                        {nestedItem.subContent && (
+                            <div class="ast-accordion__sub-content" set:html={nestedItem.subContent}></div>
+                        )}
+                      </>
+                    </div>
+                    <div class="ast-accordion__item" data-accordion-item data-expanded="false">
+                      <div class="ast-h3">
+                        <button
+                          class="ast-accordion__trigger"
+                          type="button"
+                          aria-expanded="false"
+                          aria-controls={`ast-accordion-content-${nestedItem.id}`}
+                          id={`ast-accordion-trigger-${nestedItem.id}`}
+                          data-accordion-trigger>
+                          <div class="ast-accordion__icon-wrapper">
+                            <i class="icon icon-minus" aria-hidden="true" />
+                            <i class="icon icon-plus" aria-hidden="true" />
+                          </div>
+                          <div class="ast-accordion__title">{nestedItem.title}</div>
+                        </button>
+                      </div>
+                      {/* Second layer of nesting */}
+                      <div
+                        class="ast-accordion__content"
+                        id={`ast-accordion-content-${nestedItem.id}`}
+                        aria-labelledby={`ast-accordion-trigger-${nestedItem.id}`}
+                        role="region"
+                        data-accordion-content>
+                        <div class="ast-accordion__body" inert>
+                          {nestedItem.htmlContent ? (
+
+                            <div set:html={nestedItem.htmlContent} />
+                          ) : nestedItem.content ? (
+                            <>
+                              <div set:html={nestedItem.content} />
+                            </>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </article>
+              </>
+            ) : item.htmlContent ? (
+              <div set:html={item.htmlContent} />
+            ) : item.content ? (
+              <div set:html={item.content} />
+            ) : item.children ? (
+              <Fragment set:html={item.children} />
+            ) : (
+              <slot />
+            )}
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</article>
+

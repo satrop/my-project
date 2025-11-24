@@ -1,0 +1,170 @@
+@use "sass:map";
+@use "sass:list";
+@use "sass:meta";
+@use "sass:string";
+@use "../tokens/spacing/spacing" as *;
+
+// Standard breakpoints
+$breakpoints: (
+  sm: 0,
+  md: 768px,
+  lg: 1024px,
+);
+
+// Helper function to process a single token and return breakpoint values
+@function get-token-values($token) {
+  $is-negative: false;
+  $actual-token: $token;
+
+  @if meta.type-of($token)=="string" and string.slice($token, 1, 1)=="-" {
+    $is-negative: true;
+    $actual-token: string.slice($token, 2);
+  }
+
+  $map: map.get($spacing, $actual-token);
+
+  @if not $map {
+    @error "Spacing token `#{$actual-token}` not found in $spacing map.";
+  }
+
+  $result: (
+  );
+
+@each $breakpoint, $value in $map {
+  $final-value: if($is-negative, -1 * $value, $value);
+  $result: map.set($result, $breakpoint, $final-value);
+}
+
+@return $result;
+}
+
+// Helper function to build CSS shorthand from multiple tokens
+@function build-spacing-value($tokens, $breakpoint) {
+  $values: (
+  );
+
+@each $token in $tokens {
+  $token-map: get-token-values($token);
+  $value: map.get($token-map, $breakpoint);
+  $values: list.append($values, $value);
+}
+
+@return $values;
+}
+
+// Debug mode - set to true to add comments showing token names in compiled CSS
+$spacing-debug: false !default;
+
+@mixin spacing($property, $top, $right: null, $bottom: null, $left: null) {
+  $tokens: (
+  );
+
+// Parse arguments based on CSS shorthand rules
+@if $left !=null {
+  // 4 values: top, right, bottom, left
+  $tokens: (
+    $top,
+    $right,
+    $bottom,
+    $left
+  );
+}
+
+@else if $bottom !=null {
+  // 3 values: top, horizontal, bottom
+  $tokens: (
+    $top,
+    $right,
+    $bottom
+  );
+}
+
+@else if $right !=null {
+  // 2 values: vertical, horizontal
+  $tokens: (
+    $top,
+    $right
+  );
+}
+
+@else {
+  // 1 value: all sides
+  $tokens: (
+    $top,
+  );
+}
+
+// Get all unique breakpoints from all tokens
+$all-breakpoints: (
+);
+
+@each $token in $tokens {
+  $token-map: get-token-values($token);
+
+  @each $bp, $value in $token-map {
+    @if not list.index($all-breakpoints, $bp) {
+      $all-breakpoints: list.append($all-breakpoints, $bp);
+    }
+  }
+}
+
+// Generate CSS for each breakpoint
+@each $breakpoint in $all-breakpoints {
+  $bp-value: map.get($breakpoints, $breakpoint);
+  $spacing-values: build-spacing-value($tokens, $breakpoint);
+
+  // DEBUGGING: Add comment showing which tokens are being used
+  @if $spacing-debug {
+    @if $bp-value ==0 {
+      /* spacing(#{$property}, #{$tokens}) */
+    }
+
+    @else {
+      @media (min-width: #{$bp-value}) {
+        /* spacing(#{$property}, #{$tokens}) @ #{$breakpoint} */
+      }
+    }
+  }
+
+  // Output the CSS directly without nested selectors for better source maps
+  @if $bp-value ==0 {
+    #{$property}: $spacing-values;
+  }
+
+  @else {
+    @media (min-width: #{$bp-value}) {
+      #{$property}: $spacing-values;
+    }
+  }
+}
+}
+
+// Optional: Generate CSS custom properties for use in components or utilities
+@each $token, $breakpoint-values in $spacing {
+  @each $breakpoint, $value in $breakpoint-values {
+    $bp-value: map.get($breakpoints, $breakpoint);
+
+    @if $bp-value ==0 {
+      :root {
+        --spacing-#{$token}-#{$breakpoint}: #{$value};
+      }
+    }
+
+    @else {
+      @media (min-width: #{$bp-value}) {
+        :root {
+          --spacing-#{$token}-#{$breakpoint}: #{$value};
+        }
+      }
+    }
+  }
+}
+
+// Example usage - CSS-like shorthand syntax
+// .ast-example {
+//   @include spacing(margin, 32);              // All sides: 32px
+//   @include spacing(padding, 16, 24);         // Vertical: 16px, Horizontal: 24px  
+//   @include spacing(margin, 8, 16, 12);       // Top: 8px, Horizontal: 16px, Bottom: 12px
+//   @include spacing(padding, 8, 16, 12, 20);  // Top: 8px, Right: 16px, Bottom: 12px, Left: 20px
+//   @include spacing(margin, -16, 0, 24);      // Negative top, zero horizontal, positive bottom
+// }

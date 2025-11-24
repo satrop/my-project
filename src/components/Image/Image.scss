@@ -1,0 +1,79 @@
+// Aspect ratios
+$aspect-ratios: (
+  '1/1',
+  '4/3',
+  '3/4',
+  '21/9',
+  '3/2',
+  '2/3'
+);
+
+// Object fits
+$object-fits: (
+  'contain',
+  'fill',
+  'scale-down',
+  'none'
+);
+
+// Object positions
+$object-positions: (
+  'top',
+  'bottom',
+  'left',
+  'right',
+  'center'
+);
+
+.ast-image-container {
+  width: var(--ast-container-width, 100%);
+  height: var(--ast-container-height, auto);
+  aspect-ratio: var(--ast-aspect-ratio, 16/9);
+  position: relative;
+  overflow: hidden;
+
+  // Aspect ratios
+  @each $ratio in $aspect-ratios {
+    &[data-aspect-ratio="#{$ratio}"] {
+      --ast-aspect-ratio: #{$ratio};
+    }
+  }
+
+  // Object fits
+  @each $fit in $object-fits {
+    &[data-object-fit="#{$fit}"] {
+      --ast-object-fit: #{$fit};
+    }
+  }
+
+  // Object positions
+  @each $pos in $object-positions {
+    &[data-object-position="#{$pos}"] {
+      --ast-object-position: #{$pos};
+    }
+  }
+}
+
+.ast-image {
+  width: 100%;
+  height: 100%;
+  object-fit: var(--ast-object-fit, cover);
+  object-position: var(--ast-object-position, center);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+// ! --------------------------------------------
+// ! Do not edit ABOVE THIS LINE
+// ! --------------------------------------------
+
+// * --------------------------------------------
+// * Define custom styles below
+// * Use the "ast-" prefix to avoid conflicts
+// * Remove any styles you don't need
+// * --------------------------------------------
+
+.ast-outline--warning {
+  outline: 2px dashed orange;
+}

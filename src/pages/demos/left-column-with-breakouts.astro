@@ -1,0 +1,97 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+---
+
+<Layout
+  title="Astriata Boilerplate"
+  pageClass="ast-page-name"
+  layoutType="left-sidebar"
+  asideClass="ast-demo ast-demo-color-1">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="left-content">
+    <h2>Left Sidebar Content</h2>
+    <p>Add your sidebar content here...</p>
+  </Fragment>
+  <Fragment slot="main-content">
+    <AstTray className="ast-demo ast-demo-color-5">
+      <h4>Regular - Content Main</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, voluptatum.</p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus quod pariatur magnam soluta officia quam
+        debitis blanditiis provident. Corrupti exercitationem nisi laborum?
+      </p>
+    </AstTray>
+
+    <!-- Wide Bilateral Breakout - Cuts across sidebar -->
+    <AstTray trayWidth="wide" className="ast-demo ast-demo-color-1">
+      <h4>Wide Bilateral - Content Main</h4>
+      <p>This tray cuts across the sidebar and extends to wide boundaries on both sides.</p>
+      <p>Perfect for section breaks that need to visually separate content while maintaining readable width.</p>
+    </AstTray>
+
+    <!-- Wide Bilateral with Wide Content -->
+    <AstTray trayWidth="wide" containerWidth="wide" className="ast-demo ast-demo-color-2">
+      <h4>Wide Bilateral - Content Wide</h4>
+      <p>Background and content both extend to wide boundaries, cutting across the sidebar.</p>
+      <p>Great for featured content sections that need more space and visual emphasis.</p>
+    </AstTray>
+
+    <!-- Full Bilateral Breakout - Maximum impact -->
+    <AstTray trayWidth="full" className="ast-demo ast-demo-color-3">
+      <h4>Full Bilateral - Content Main</h4>
+      <p>This tray extends full width, cutting across the sidebar completely.</p>
+      <p>Maximum visual impact for heroes, banners, or major content divisions while keeping content readable.</p>
+    </AstTray>
+
+    <!-- Full Bilateral with Full Content -->
+    <AstTray trayWidth="full" containerWidth="full" className="ast-demo ast-demo-color-4">
+      <h4>Full Bilateral - Content Full</h4>
+      <p>Background and content both extend full width for complete edge-to-edge experience.</p>
+      <p>Perfect for banners, hero images, or any content requiring maximum viewport utilization.</p>
+    </AstTray>
+
+    <AstTray className="ast-demo ast-demo-color-5">
+      <h4>Regular - Content Main</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, voluptatum.</p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus quod pariatur magnam soluta officia quam
+        debitis blanditiis provident. Corrupti exercitationem nisi laborum?
+      </p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus quod pariatur magnam soluta officia quam
+        debitis blanditiis provident. Corrupti exercitationem nisi laborum?
+      </p>
+    </AstTray>
+  </Fragment>
+</Layout>
+
+<!-- 
+Do not use 'on page scss other than here'. Astro will add hex classes to scss to avoid collisions 
+and this makes BED bigly mad! This page will not be shipped to production so it's ok to have styles here.
+-->
+<style lang="scss">
+  :global(.ast-demo) {
+    padding: 1rem;
+  }
+
+  :global(.ast-demo-color-1) {
+    background-color: #80a1ba;
+  }
+
+  :global(.ast-demo-color-2) {
+    background-color: #91c4c3;
+  }
+
+  :global(.ast-demo-color-3) {
+    background-color: #b4debd;
+  }
+
+  :global(.ast-demo-color-4) {
+    background-color: #c2e2fa;
+  }
+
+  :global(.ast-demo-color-5) {
+    background-color: #b7a3e3;
+  }
+</style>

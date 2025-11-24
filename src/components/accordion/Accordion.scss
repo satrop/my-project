@@ -1,0 +1,142 @@
+// --------------------------------------------
+// Structural styles
+// --------------------------------------------
+.ast-accordion-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  p {
+    color: #000;
+  }
+
+  @media (width > 550px) and (width < 1024px) {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.ast-accordion {
+  overflow: hidden;
+}
+
+.ast-accordion__item {
+  display: grid;
+  grid-template-rows: auto 0fr;
+  overflow: hidden;
+
+  &[data-expanded="true"] {
+    grid-template-rows: auto 1fr;
+  }
+}
+
+.ast-accordion__content {
+  overflow: hidden;
+}
+
+.ast-accordion__body {
+  overflow: hidden;
+
+  [data-expanded="true"] & {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ast-checkbox-accordion & {
+    @media(width>=1024px) {
+      .ast-accordion__trigger {
+        pointer-events: none;
+        cursor: default;
+      }
+    }
+  }
+}
+
+.ast-accordion__header {
+  margin: 0;
+}
+
+.ast-accordion__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: left;
+
+  .ast-checkbox-accordion & {
+    @media(width>=1024px) {
+      pointer-events: none;
+      cursor: default;
+
+      &:focus {
+        outline: none;
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+.ast-accordion__title {
+  flex: 1;
+}
+
+// ! --------------------------------------------
+// ! Do not edit ABOVE THIS LINE
+// ! --------------------------------------------
+
+// * --------------------------------------------
+// * Define custom styles below
+// * Use the "ast-" prefix to avoid conflicts
+// * --------------------------------------------
+
+.ast-accordion__item {
+  transition: grid-template-rows 0.3s ease;
+
+  &:hover {
+    button {
+      background-color: transparent;
+    }
+  }
+}
+
+.ast-accordion__body {
+  padding: 1rem 0;
+  opacity: 0;
+  transform: translateY(-0.5rem);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.ast-accordion__trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  min-height: unset;
+
+  .ast-accordion__icon-wrapper {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 1rem;
+  }
+
+  .icon {
+    font-size: 0;
+    transition: font-size var(--anim);
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &[aria-expanded="true"] {
+    .icon-minus {
+      font-size: 1rem;
+    }
+  }
+
+  &[aria-expanded="false"] {
+    .icon-plus {
+      font-size: 1rem;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+@use "../tokens/colors" as *;
+@use "sass:color";
+
+// ==========================================================================
+// Color Utilities
+// ==========================================================================
+
+// Generate CSS variables for each color shade
+:root {
+  @each $group, $shades in $colors {
+    @each $shade, $value in $shades {
+      --#{$group}-#{$shade}: #{$value};
+      // Generate RGB values for rgba() usage
+      --#{$group}-#{$shade}-rgb: #{color.channel($value, "red", $space: rgb)},
+      #{color.channel($value, "green", $space: rgb)},
+      #{color.channel($value, "blue", $space: rgb)};
+    }
+  }
+}
+
+// Generate utility classes for background and text colors
+@each $group, $shades in $colors {
+  @each $shade, $value in $shades {
+    .ast-bg-#{$group}-#{$shade} {
+      background-color: var(--#{$group}-#{$shade});
+    }
+
+    .ast-text--#{$group}-#{$shade} {
+      color: var(--#{$group}-#{$shade});
+    }
+  }
+}
+
+// CSS Example
+// .ast-bg-red-300 {
+//   background-color: var(--red-300);
+// }
+// .ast-text--yellow-500 {
+//   color: var(--yellow-500);
+// }
+
+// HTML Example
+// <div class="ast-bg-red-300 text-yellow-500">This is a red background with yellow text.</div>

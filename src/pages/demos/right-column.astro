@@ -1,0 +1,69 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+---
+
+<Layout
+  title="Astriata Boilerplate"
+  pageClass="ast-page-name"
+  layoutType="right-sidebar"
+  asideClass="ast-demo ast-demo-color-1">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="main-content">
+    <AstTray className="ast-demo ast-demo-color-5">
+      <h4>Regular - Content Main</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, voluptatum.</p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus quod pariatur magnam soluta officia quam
+        debitis blanditiis provident. Corrupti exercitationem nisi laborum?
+      </p>
+    </AstTray>
+
+    <AstTray className="ast-demo ast-demo-color-5">
+      <h4>Regular - Content Main</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, voluptatum.</p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus quod pariatur magnam soluta officia quam
+        debitis blanditiis provident. Corrupti exercitationem nisi laborum?
+      </p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus quod pariatur magnam soluta officia quam
+        debitis blanditiis provident. Corrupti exercitationem nisi laborum?
+      </p>
+    </AstTray>
+  </Fragment>
+  <Fragment slot="right-content">
+    <h2>Right Sidebar Content</h2>
+    <p>Add your sidebar content here...</p>
+  </Fragment>
+</Layout>
+
+<!-- 
+Do not use 'on page scss other than here'. Astro will add hex classes to scss to avoid collisions 
+and this makes BED bigly mad! This page will not be shipped to production so it's ok to have styles here.
+-->
+<style lang="scss">
+  :global(.ast-demo) {
+    padding: 1rem;
+  }
+
+  :global(.ast-demo-color-1) {
+    background-color: #80a1ba;
+  }
+
+  :global(.ast-demo-color-2) {
+    background-color: #91c4c3;
+  }
+
+  :global(.ast-demo-color-3) {
+    background-color: #b4debd;
+  }
+
+  :global(.ast-demo-color-4) {
+    background-color: #c2e2fa;
+  }
+
+  :global(.ast-demo-color-5) {
+    background-color: #b7a3e3;
+  }
+</style>

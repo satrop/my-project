@@ -1,0 +1,14 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+---
+
+<Layout title="[]" pageClass="ast-centered-page" layoutType="centered">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="centered-content">
+    <AstTray>
+      <h1>Centered Content Area</h1>
+      <p>Add your centered page content here...</p>
+    </AstTray>
+  </Fragment>
+</Layout>

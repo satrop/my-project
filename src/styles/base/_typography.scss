@@ -1,0 +1,66 @@
+@use '../tokens/typography/typography-vars' as *;
+@use "../../styles/core/spacing.core" as *;
+
+:root {
+  --font-obliqua: "obliqua", sans-serif;
+  --font-quasimoda: "quasimoda", sans-serif;
+}
+
+
+body {
+  font-weight: var(--font-weight-400);
+  font-family: var(--font-quasimoda);
+  font-size: var(--p-md);
+  color: var(--neutral-600);
+}
+
+.ast-font {
+  &--quasimoda {
+    font-family: var(--font-quasimoda);
+  }
+
+  &--obliqua {
+    font-family: var(--font-obliqua);
+  }
+}
+
+p+p {
+  margin-top: 1rem;
+}
+
+.ast-h1,
+.ast-h2,
+.ast-h3,
+.ast-h4,
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-obliqua);
+  font-weight: var(--font-weight-700);
+}
+
+.ast-h1,
+h1 {
+  font-size: var(--h1);
+  @include spacing(padding, 60, 0, 32); // Large spacing for main headings
+}
+
+.ast-h2,
+h2 {
+  font-size: var(--h2);
+  @include spacing(padding, 24, 0); // Medium spacing for section headings
+}
+
+.ast-h3,
+h3 {
+  font-size: var(--h3);
+  @include spacing(padding, 20, 0); // Smaller spacing for subsection headings
+}
+
+.ast-h4,
+h4 {
+  font-size: var(--h4);
+  text-transform: uppercase;
+  @include spacing(padding, 16, 0); // Minimal spacing for small headings
+}

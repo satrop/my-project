@@ -1,0 +1,114 @@
+@mixin animated-underline($thickness: 1px,
+  $offsetY: 1.25em,
+  $offsetX: 0,
+  $color: currentColor,
+  $origin: left,
+  $length: 100%) {
+  text-decoration: none;
+  background-image: linear-gradient(to right, $color 0%, $color 100%);
+  background-size: 0% $thickness;
+  background-repeat: no-repeat;
+  background-position: $offsetX $offsetY;
+  transition: background-size var(--anim), background-position var(--anim);
+  text-decoration-thickness: $thickness;
+  border-radius: 0;
+
+  &:hover,
+  &:focus-visible,
+  &.hover-triggered {
+    background-size: $length $thickness;
+  }
+}
+
+@mixin animated-underline-reverse($thickness: 1px,
+  $offset: 0em,
+  $offsetY: 100%,
+  $color: currentColor) {
+  text-decoration: none;
+  background-image: linear-gradient(to right, $color 0%, $color 100%);
+  background-size: 100% $thickness;
+  background-repeat: no-repeat;
+  background-position: calc(0% + #{$offset}) $offsetY;
+  transition: background-size var(--anim), background-position var(--anim);
+  text-decoration-thickness: $thickness;
+  transform-origin: center;
+  border-radius: 0;
+
+  &:hover,
+  &:focus-visible,
+  &.hover-triggered {
+    background-size: 0 $thickness;
+  }
+}
+
+.ast-linked-underline {
+  @include animated-underline();
+}
+
+.ast-linked-underline-reverse {
+  @include animated-underline-reverse();
+}
+
+/*
+Usage examples (uncomment to use):
+
+1) Basic/default usage
+----------------------------------
+:root { --anim: 200ms ease; } // set a default timing variable
+a.link {
+  @include animated-underline();
+}
+
+2) Custom thickness, offset, and color
+----------------------------------
+Use explicit thickness (2px), offset (0.35em) and a hex color
+a.lead {
+ @include animated-underline(2px, 0.35em, #1a73e8);
+}
+
+3) Use currentColor so underline follows text color (with hover color change)
+----------------------------------
+.btn {
+ color: #1a73e8;
+ background: transparent;
+ @include animated-underline(2px, 0.25em, currentColor);
+}
+.btn:hover {
+ color: #0b56c6; // underline will match this color on hover
+}
+
+4) Global animation speed and easing control
+----------------------------------
+Set animation timing once (use wherever you scope your CSS variables)
+:root { --anim: 250ms cubic-bezier(.2, .8, .2, 1); }
+a { @include animated-underline(); }
+
+Notes:
+- The mixin accepts an $origin parameter but it is not currently used in the implementation.
+- Adjust the CSS variable `--anim` to control duration/easing for the underline animation.
+*/
+
+/*
+5) Custom color via CSS variable (underline independent from text color)
+----------------------------------
+Define a custom CSS variable for the underline color and use it when including
+the mixin so the underline can differ from the text color.
+:root { --underline-color: #ff6b6b; --anim: 220ms ease; }
+.promo-link {
+ color: #111; // text color
+ @include animated-underline(2px, 0.28em, var(--underline-color));
+}
+.promo-link:hover {
+ --underline-color: #ff8787; // change only the underline color on hover
+}
+*/
+
+/*
+6) Reverse animated underline (line shown first, animates from right to left on hover)
+----------------------------------
+Use the reverse mixin for an underline that starts full and animates inward from the right.
+:root { --anim: 200ms ease; }
+a.link-reverse {
+ @include animated-underline-reverse();
+}
+*/

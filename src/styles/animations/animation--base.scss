@@ -1,0 +1,115 @@
+// ==========================================================================
+// Animation Base Styles
+// ==========================================================================
+// Base animation classes and utilities for animate.css integration
+
+:root {
+  --distance: 5%;
+  --anim: 0.3s ease-in-out;
+}
+
+// Base animation styles (always included)
+.ast-animate__animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+.ast-animate__infinite {
+  animation-iteration-count: infinite;
+}
+
+.ast-animate__repeat-1 {
+  animation-iteration-count: 1;
+}
+
+.ast-animate__repeat-2 {
+  animation-iteration-count: 2;
+}
+
+.ast-animate__repeat-3 {
+  animation-iteration-count: 3;
+}
+
+.ast-animate__delay-0_5s {
+  animation-delay: 0.5s;
+}
+
+.ast-animate__delay-1s {
+  animation-delay: 1s;
+}
+
+.ast-animate__delay-1_5s {
+  animation-delay: 1.5s;
+}
+
+.ast-animate__delay-2s {
+  animation-delay: 2s;
+}
+
+.ast-animate__delay-2_5s {
+  animation-delay: 2.5s;
+}
+
+.ast-animate__delay-3s {
+  animation-delay: 3s;
+}
+
+.ast-animate__delay-3_5s {
+  animation-delay: 3.5s;
+}
+
+.ast-animate__delay-4s {
+  animation-delay: 4s;
+}
+
+.ast-animate__delay-4_5s {
+  animation-delay: 4.5s;
+}
+
+.ast-animate__delay_5s {
+  animation-delay: 5s;
+}
+
+.ast-animate__faster {
+  animation-duration: 0.5s;
+}
+
+.ast-animate__fast {
+  animation-duration: 0.8s;
+}
+
+.ast-animate__slow {
+  animation-duration: 2s;
+}
+
+.ast-animate__slower {
+  animation-duration: 3s;
+}
+
+// ==========================================================================
+// Animation Observer Classes
+// ==========================================================================
+
+// Class for elements that should animate when they enter the viewport
+.ast-animate-on-scroll {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+// Class added when element is in viewport
+.ast-animate-on-scroll.in-viewport {
+  opacity: 1;
+}
+
+// Disable animations for users who prefer reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .ast-animate__animated {
+    animation-duration: 1ms !important;
+    animation-delay: -1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .ast-animate-on-scroll {
+    opacity: 1 !important;
+  }
+}

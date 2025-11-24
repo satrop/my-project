@@ -1,0 +1,592 @@
+---
+// Icons Showcase Page
+// This page is auto-updated by scripts/update-icons-page.js
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+import { iconsData, iconsByCategory, iconCategories } from "@/data/icons-data";
+---
+
+<Layout title="Icons System" pageClass="ast-centered-page" layoutType="centered">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="centered-content">
+    <AstTray>
+      <h1>Icons System</h1>
+      <p>
+        Our icon system includes {iconsData.length} icons across {iconCategories.length} categories. Icons are automatically
+        optimized from SVG sources and converted to a web font for optimal performance and consistent rendering across devices.
+      </p>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-icons-section">
+        <h2 class="ast-icons-section__title">Available Icons</h2>
+        <div class="ast-icons-grid">
+          {
+            iconsData.map((icon) => (
+              <div class="ast-icon-item">
+                <div class="ast-icon-visual">
+                  <i class={`icon ${icon.className}`} />
+                </div>
+                <div class="ast-icon-info">
+                  <div class="ast-icon-name">{icon.displayName}</div>
+                  <div class="ast-icon-usage">
+                    <code>.{icon.className}</code>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-icons-section">
+        <h2 class="ast-icons-section__title">Size Variations</h2>
+        <div class="ast-size-examples">
+          <div class="ast-size-example">
+            <div class="ast-size-label">Normal Size</div>
+            <div class="ast-size-demo">
+              {iconsData.slice(0, 5).map((icon) => <i class={`icon ${icon.className}`} />)}
+            </div>
+            <div class="ast-size-code">
+              <code>&lt;i class="icon {iconsData[0]?.className}"&gt;&lt;/i&gt;</code>
+            </div>
+          </div>
+
+          <div class="ast-size-example">
+            <div class="ast-size-label">Large Size</div>
+            <div class="ast-size-demo">
+              {iconsData.slice(0, 5).map((icon) => <i class={`icon ${icon.className} icon-lg`} />)}
+            </div>
+            <div class="ast-size-code">
+              <code>&lt;i class="icon {iconsData[0]?.className} icon-lg"&gt;&lt;/i&gt;</code>
+            </div>
+          </div>
+
+          <div class="ast-size-example">
+            <div class="ast-size-label">2x Size</div>
+            <div class="ast-size-demo">
+              {iconsData.slice(0, 3).map((icon) => <i class={`icon ${icon.className} icon-2x`} />)}
+            </div>
+            <div class="ast-size-code">
+              <code>&lt;i class="icon {iconsData[0]?.className} icon-2x"&gt;&lt;/i&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-icons-section">
+        <h2 class="ast-icons-section__title">Usage Examples</h2>
+
+        <div class="ast-usage-example">
+          <h3>In Buttons</h3>
+          <p>Icons work seamlessly with button components:</p>
+          <div class="ast-button-examples">
+            <button type="button" class="ast-btn ast-btn--primary">
+              <i class="icon icon-social-facebook"></i>
+              Share on Facebook
+            </button>
+            <button type="button" class="ast-btn ast-btn--secondary">
+              <i class="icon icon-social-linkedin"></i>
+              Connect
+            </button>
+            <button type="button" class="ast-btn ast-btn--outline">
+              <i class="icon icon-social-youtube"></i>
+              Subscribe
+            </button>
+          </div>
+        </div>
+
+        <div class="ast-usage-example">
+          <h3>In Lists</h3>
+          <p>Perfect for bullet points and navigation:</p>
+          <ul class="ast-icon-list">
+            {
+              iconsData.slice(0, 4).map((icon) => (
+                <li>
+                  <i class={`icon ${icon.className}`} />
+                  {icon.displayName}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="ast-usage-example">
+          <h3>Inline Text</h3>
+          <p>
+            Follow us on <i class="icon icon-social-facebook"></i> Facebook,
+            <i class="icon icon-social-linkedin"></i> LinkedIn, and
+            <i class="icon icon-social-youtube"></i> YouTube for updates.
+          </p>
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-icons-section">
+        <h2 class="ast-icons-section__title">Implementation</h2>
+
+        <div class="ast-code-section">
+          <h3>Basic Usage</h3>
+          <div class="ast-code-example">
+            <pre><code>{iconsData.map(icon => `<i class="icon ${icon.className}"></i>`).join('\n')}</code></pre>
+          </div>
+        </div>
+
+        <div class="ast-code-section">
+          <h3>Available Size Classes</h3>
+          <div class="ast-code-example">
+            <code>.icon</code> - Base icon class (required)<br />
+            <code>.icon-&#123;name&#125;</code> - Specific icon class<br />
+            <code>.icon-lg</code> - Large size (1.33x)<br />
+            <code>.icon-xs</code> - Extra small (0.75x)<br />
+            <code>.icon-2x, .icon-3x, .icon-4x</code> - Size multipliers
+          </div>
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-icons-section">
+        <h2 class="ast-icons-section__title">Design Team Guidelines</h2>
+        <p>
+          Before icons can be processed by the development pipeline, they need to be prepared according to these
+          specifications:
+        </p>
+
+        <div class="ast-build-steps">
+          <div class="ast-build-step">
+            <div class="ast-build-number">1</div>
+            <div class="ast-build-content">
+              <h4>Outline Strokes</h4>
+              <p>
+                Convert any strokes present in the icon to outlined shapes. This ensures consistent rendering when
+                converted to font format.
+              </p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">2</div>
+            <div class="ast-build-content">
+              <h4>Flatten Icon</h4>
+              <p>
+                Flatten all layers and elements into a single compound shape. Remove any unnecessary groups or layers.
+              </p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">3</div>
+            <div class="ast-build-content">
+              <h4>Create 24×24 Frame</h4>
+              <p>
+                Create a 24×24 pixel artboard or frame to contain the icon. This standardizes the icon size across the
+                system.
+              </p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">4</div>
+            <div class="ast-build-content">
+              <h4>Name the Frame</h4>
+              <p>
+                Use descriptive, kebab-case names like <code>email</code>, <code>map-pin</code>. For social icons,
+                prefix with <code>social-</code> (e.g., <code>social-facebook</code>).
+              </p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">5</div>
+            <div class="ast-build-content">
+              <h4>Position Icon in Frame</h4>
+              <p>
+                Center the icon within the frame and resize to fit edge-to-edge without bleeding outside the boundaries.
+              </p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">6</div>
+            <div class="ast-build-content">
+              <h4>Handoff Complete</h4>
+              <p>
+                Once the frame is properly named and positioned, notify the front-end development team. The FEDs will
+                handle SVG export and placement in <code>public/assets/fonts/icons/raw/</code> for processing.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-icons-section">
+        <h2 class="ast-icons-section__title">Development Build Process</h2>
+        <p>Once design-ready SVGs are provided, icons are processed through an automated pipeline:</p>
+
+        <div class="ast-build-steps">
+          <div class="ast-build-step">
+            <div class="ast-build-number">1</div>
+            <div class="ast-build-content">
+              <h4>Add SVGs</h4>
+              <p>Place source SVG files in <code>public/fonts/icons/raw/</code></p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">2</div>
+            <div class="ast-build-content">
+              <h4>Optimize</h4>
+              <p>Run <code>pnpm run icons:optimize</code> - Uses SVGO to optimize and clean SVG files</p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">3</div>
+            <div class="ast-build-content">
+              <h4>Rename</h4>
+              <p>Run <code>pnpm run icons:rename</code> - Adds Unicode prefixes for font generation</p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">4</div>
+            <div class="ast-build-content">
+              <h4>Generate Font</h4>
+              <p>Run <code>pnpm run icons:build</code> - Creates WOFF/WOFF2 font files and CSS</p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">5</div>
+            <div class="ast-build-content">
+              <h4>Update Page</h4>
+              <p>Run <code>pnpm run icons:update-page</code> - Auto-updates this showcase with new icons</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ast-code-section">
+          <h3>Quick Command</h3>
+          <div class="ast-code-example">
+            <code>pnpm run icons</code>
+            <p>Runs the complete pipeline: optimize → rename → build → update page</p>
+          </div>
+        </div>
+      </section>
+    </AstTray>
+  </Fragment>
+</Layout>
+
+<style>
+  /* Icons Grid */
+  .ast-icons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .ast-icon-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--neutral-25, #ffffff);
+    border: 1px solid var(--neutral-200, #e5ddd5);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .ast-icon-item:hover {
+    border-color: var(--teal-300, #006e79);
+    box-shadow: 0 2px 8px rgba(29, 161, 178, 0.1);
+  }
+
+  .ast-icon-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3rem;
+    height: 3rem;
+    background: var(--neutral-100, #f4f0eb);
+    border-radius: 6px;
+  }
+
+  .ast-icon-visual i {
+    font-size: 1.5rem;
+    color: var(--teal-500, #1da1b2);
+  }
+
+  .ast-icon-info {
+    flex: 1;
+  }
+
+  .ast-icon-name {
+    font-weight: 600;
+    color: var(--neutral-800, #3a3026);
+    margin-bottom: 0.25rem;
+  }
+
+  .ast-icon-usage code {
+    font-size: 0.85rem;
+    background: var(--neutral-100, #f4f0eb);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    color: var(--neutral-600, #5a4f42);
+  }
+
+  /* Size Examples */
+  .ast-size-examples {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .ast-size-example {
+    padding: 1.5rem;
+    background: var(--neutral-25, #ffffff);
+    border: 1px solid var(--neutral-200, #e5ddd5);
+    border-radius: 8px;
+  }
+
+  .ast-size-label {
+    font-weight: 600;
+    color: var(--neutral-800, #3a3026);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .ast-size-demo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .ast-size-demo i {
+    color: var(--teal-500, #1da1b2);
+  }
+
+  .ast-size-code {
+    font-size: 0.9rem;
+  }
+
+  .ast-size-code code {
+    background: var(--neutral-100, #f4f0eb);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    color: var(--neutral-600, #5a4f42);
+  }
+
+  /* Usage Examples */
+  .ast-usage-example {
+    margin-bottom: 2rem;
+  }
+
+  .ast-usage-example:last-child {
+    margin-bottom: 0;
+  }
+
+  .ast-usage-example h3 {
+    margin-bottom: 0.5rem;
+    color: var(--neutral-800, #3a3026);
+  }
+
+  .ast-usage-example p {
+    margin-bottom: 1rem;
+    color: var(--neutral-600, #5a4f42);
+  }
+
+  .ast-button-examples {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .ast-button-examples .ast-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ast-icon-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ast-icon-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--neutral-100, #f4f0eb);
+  }
+
+  .ast-icon-list li:last-child {
+    border-bottom: none;
+  }
+
+  .ast-icon-list i {
+    color: var(--teal-500, #1da1b2);
+    width: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* Code Examples */
+  .ast-code-section {
+    margin-bottom: 2rem;
+  }
+
+  .ast-code-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .ast-code-section h3 {
+    margin-bottom: 1rem;
+    color: var(--neutral-800, #3a3026);
+  }
+
+  .ast-code-example {
+    background: var(--neutral-800, #3a3026);
+    color: var(--neutral-50, #f9f6f1);
+    padding: 1.5rem;
+    border-radius: 8px;
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+
+  .ast-code-example code {
+    color: inherit;
+    background: none;
+    padding: 0;
+  }
+
+  .ast-code-example pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  /* Build Steps */
+  .ast-build-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .ast-build-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .ast-build-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: var(--teal-500, #1da1b2);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  .ast-build-content h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--neutral-800, #3a3026);
+  }
+
+  .ast-build-content p {
+    margin: 0;
+    color: var(--neutral-600, #5a4f42);
+  }
+
+  .ast-build-content code {
+    background: var(--neutral-100, #f4f0eb);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: var(--neutral-600, #5a4f42);
+  }
+
+  /* Design Notes */
+  .ast-design-notes {
+    background: var(--neutral-50, #f9f6f1);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--teal-500, #1da1b2);
+    margin-top: 2rem;
+  }
+
+  .ast-design-notes h3 {
+    margin: 0 0 1rem 0;
+    color: var(--neutral-800, #3a3026);
+  }
+
+  .ast-design-notes ul {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .ast-design-notes li {
+    margin-bottom: 0.75rem;
+    color: var(--neutral-600, #5a4f42);
+    line-height: 1.5;
+  }
+
+  .ast-design-notes li:last-child {
+    margin-bottom: 0;
+  }
+
+  .ast-design-notes strong {
+    color: var(--neutral-800, #3a3026);
+  }
+
+  /* Section Titles */
+  .ast-icons-section__title {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--teal-300, #006e79);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .ast-icons-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ast-icon-item {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .ast-size-demo {
+      justify-content: center;
+    }
+
+    .ast-button-examples {
+      flex-direction: column;
+    }
+
+    .ast-build-step {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>

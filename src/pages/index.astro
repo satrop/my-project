@@ -1,0 +1,106 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import HomePageLinkListComponent from "@/components/HomePageLinkList/HomePageLinkList.astro";
+import { siteLinks } from "@/data/site-links";
+
+const { heroComponents, contentComponents, layoutDesign, pages } = siteLinks;
+
+// Calculate counts
+const allComponents = [...contentComponents];
+const totalComponents = allComponents.length;
+const doneComponents = allComponents.filter((c) => c.className === "done").length;
+
+// Calculate pages
+const allPages = [...pages];
+const totalPages = allPages.length;
+const donePages = allPages.filter((p) => p.className === "done").length;
+
+// Calculate heros
+const totalHero = heroComponents.length;
+const doneHero = heroComponents.filter((c) => c.className === "done").length;
+---
+
+<Layout title="Astriata Boilerplate" pageClass="ast-centered-page" layoutType="centered">
+  <Fragment slot="centered-content">
+    <!-- <Fragment slot="main"> -->
+    <section class="ast-tray">
+      <div class="ast-container ast-container--main">
+        <h1>[Client Name] Components Count: <span>{doneComponents} of {totalComponents} complete</span></h1>
+        <h2>[Client Name] Page Count: <span>{donePages} of {totalPages} complete</span></h2>
+        <h3>[Client Name] Hero Count: <span>{doneHero} of {totalHero} complete</span></h3>
+      </div>
+    </section>
+    <section class="ast-tray">
+      <div class="ast-container ast-container--main">
+        <h2 class="ast-h2">Pages</h2>
+        <HomePageLinkListComponent links={pages} navLabel="Pages links" />
+      </div>
+    </section>
+    <section class="ast-tray">
+      <div class="ast-container ast-container--main">
+        <h2 class="ast-h2">Content Components</h2>
+        <HomePageLinkListComponent links={contentComponents} navLabel="Content components links" />
+      </div>
+    </section>
+    <section class="ast-tray">
+      <div class="ast-container ast-container--main">
+        <h2 class="ast-h2">Heros</h2>
+        <HomePageLinkListComponent links={heroComponents} navLabel="Hero components links" />
+      </div>
+    </section>
+    <section class="ast-tray">
+      <div class="ast-container ast-container--main">
+        <h2 class="ast-h2">Layout &amp; Design</h2>
+        <HomePageLinkListComponent links={layoutDesign} navLabel="Layout & Design links" />
+      </div>
+    </section>
+    <section class="ast-tray" style="margin-bottom: 100px;">
+      <div class="ast-container ast-container--main">
+        <h2 class="ast-h2">Key:</h2>
+        <ul class="ast-key">
+          <li><span class="ast-no">❌</span> Not Started</li>
+          <li><span class="ast-started">🛠️</span> In Progress</li>
+          <li><span class="ast-done">✅</span> Complete</li>
+        </ul>
+      </div>
+    </section>
+  </Fragment>
+</Layout>
+
+<!-- 
+Do not use 'on page scss other than here'. Astro will add hex classes to scss to avoid collisions 
+and this makes BED bigly mad! This page will not be shipped to production so it's ok to have styles here.
+-->
+<style lang="scss" is:global>
+  section + section {
+    margin-top: 3rem;
+  }
+
+  .ast-key {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0 0;
+    width: 100%;
+
+    @media (width >= 768px) {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    li {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      gap: 0.5rem;
+
+      @media (width >= 768px) {
+        flex-wrap: wrap;
+        width: 32.333%;
+      }
+    }
+  }
+</style>

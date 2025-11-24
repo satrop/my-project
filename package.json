@@ -1,0 +1,104 @@
+{
+  "name": "create-ast-boilerplate",
+  "version": "2.0.2",
+  "type": "module",
+  "description": "AST Boilerplate - A starter template for building modern web applications",
+  "keywords": [
+    "boilerplate",
+    "astro",
+    "template",
+    "starter"
+  ],
+  "author": "Steven Portas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevenportas/create-ast-boilerplate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stevenportas/create-ast-boilerplate/issues"
+  },
+  "homepage": "https://github.com/stevenportas/create-ast-boilerplate#readme",
+  "bin": {
+    "create-ast-boilerplate": "./create.js"
+  },
+  "files": [
+    "src",
+    "public",
+    "scripts",
+    "docs",
+    "astro.config.mjs",
+    "astro.config.minimal.mjs",
+    "site.config.js",
+    "tsconfig.json",
+    "vite.config.js",
+    "create.js",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "pnpm --silent run _build:js:deploy && concurrently --raw \"pnpm --silent run _build:js:watch\" \"astro dev\" --names js,astro --prefix-colors yellow,blue",
+    "dev:quiet": "pnpm --silent dev",
+    "dev:with-colors": "pnpm run colors:sync && concurrently \"pnpm run colors:watch\" \"astro dev\" --names \"colors,astro\" --prefix-colors \"green,blue\"",
+    "build": "pnpm run _build:js:deploy && cross-env NODE_ENV=production astro build && shx mkdir -p dist/assets/img && shx mv dist/img/* dist/assets/img/ 2>/dev/null || true && shx cp -r dist/assets/* ../ResourcePackages/Aphl/assets/dist/ 2>/dev/null || true && shx rm -rf dist/img 2>/dev/null || true && shx rm -rf dist/assets/fonts/icons/raw dist/assets/fonts/icons/optimized && node scripts/patch-html.js && shx rm -rf temp-assets",
+    "build:local": "cross-env NODE_ENV=development astro build",
+    "_build:js": "vite build --logLevel warn",
+    "_build:js:deploy": "pnpm --silent run _build:js && shx cp temp-assets/main.js public/assets/js/main.js",
+    "_build:js:watch": "chokidar \"src/**/*.js\" -c \"pnpm --silent run _build:js:deploy\" --initial --silent",
+    "preview": "astro preview",
+    "astro": "astro",
+    "icons:clean": "node scripts/clean-optimized.js",
+    "icons:optimize": "pnpm run icons:clean && svgo -f public/assets/fonts/icons/raw -o public/assets/fonts/icons/optimized --config scripts/svgo.config.js",
+    "icons:rename": "node scripts/rename-icon-files.js",
+    "icons:build": "node scripts/build-icons.js",
+    "icons:update-page": "node scripts/update-icons-page.js",
+    "icons": "pnpm run icons:optimize && pnpm run icons:rename && pnpm run icons:build && pnpm run icons:update-page && pnpm run icons:sync",
+    "icons:sync": "node scripts/sync-icons.js",
+    "colors:sync": "node scripts/sync-colors.js",
+    "colors:watch": "chokidar \"src/styles/tokens/colors/_colors.scss\" -c \"pnpm run colors:sync\"",
+    "spacing:sync": "node scripts/sync-spacing.js",
+    "spacing:watch": "chokidar \"src/styles/tokens/spacing/_spacing.scss\" -c \"pnpm run spacing:sync\"",
+    "validate:html": "node scripts/validate-html.js",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "chromatic": "chromatic --exit-zero-on-changes"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "animate.css": "^4.1.1",
+    "astro": "^4.16.18",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.2.0",
+    "glob": "^11.0.3",
+    "sass-embedded": "^1.89.2",
+    "svgo": "^4.0.0",
+    "swiper": "^11.2.9",
+    "typescript": "^5.8.3",
+    "wcag-contrast": "^3.0.0",
+    "webfont": "11.2.26"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@storybook/addon-links": "^10.0.8",
+    "@storybook/html": "^10.0.8",
+    "@storybook/html-vite": "^10.0.8",
+    "@types/node": "^24.9.1",
+    "chromatic": "^13.3.4",
+    "cross-env": "^10.0.0",
+    "eslint": "^9.39.1",
+    "eslint-plugin-astro": "^1.5.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "html-validate": "^10.4.0",
+    "postcss": "^8.5.6",
+    "postcss-prefix-selector": "^2.1.1",
+    "prettier": "^3.6.2",
+    "rollup": "^4.44.2",
+    "shx": "^0.4.0",
+    "storybook": "^10.0.8",
+    "vite": "^5.4.19"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  }
+}

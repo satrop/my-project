@@ -1,0 +1,37 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+
+import AccordionComponent from "@/components/accordion/Accordion.astro";
+
+// Data
+const basicItems = [
+  {
+    id: "item1",
+    title: "What is this component library?",
+    content:
+      'This is a comprehensive collection of accessible, <a href="#">customizable UI components built with Astro</a>. Each component is designed with performance and accessibility in mind.',
+  },
+  {
+    id: "item2",
+    title: "How do I customize the components?",
+    content:
+      'Components use CSS custom properties and semantic class names for easy theming. You can override styles in your stylesheet or create new variant classes. <a href="#">Learn more</a>',
+  },
+  {
+    id: "item3",
+    title: "Are the components accessible?",
+    content:
+      "Yes! All components follow WCAG guidelines and include proper ARIA attributes, semantic HTML, keyboard navigation support, and focus management.",
+  },
+];
+---
+
+<Layout title="Accordion Component" pageClass="ast-centered-page" layoutType="centered">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="centered-content">
+    <AstTray>
+      <AccordionComponent allowMultiple={true} items={basicItems} animate="up" />
+    </AstTray>
+  </Fragment>
+</Layout>

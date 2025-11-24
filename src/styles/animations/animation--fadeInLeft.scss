@@ -1,0 +1,19 @@
+// ==========================================================================
+// Fade In Left Animation
+// ==========================================================================
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(-1 * var(--distance)), 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.ast-animate__fadeInLeft {
+  animation-name: fadeInLeft;
+}

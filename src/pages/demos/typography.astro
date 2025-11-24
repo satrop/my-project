@@ -1,0 +1,480 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+---
+
+<Layout title="Typography System" pageClass="ast-centered-page" layoutType="centered">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="centered-content">
+    <AstTray>
+      <h1>Typography System</h1>
+      <p>
+        Our typography system includes responsive headings with consistent spacing using our spacing tokens. Use the
+        toggle below to visualize the padding applied to each heading level.
+      </p>
+
+      <!-- Padding Visualization Toggle -->
+      <div class="ast-typography-controls">
+        <label class="ast-toggle-container">
+          <input type="checkbox" id="paddingToggle" class="ast-toggle-input" />
+          <span class="ast-toggle-slider"></span>
+          <span class="ast-toggle-label">Show Padding</span>
+        </label>
+        <p class="ast-toggle-description">Toggle to see the visual representation of spacing applied to headings</p>
+      </div>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-typography-section" id="typographyDemo">
+        <h2 class="ast-typography-section__title">Heading Hierarchy</h2>
+
+        <div class="ast-typography-examples">
+          <div class="ast-typography-example">
+            <div class="ast-typography-label">H1 - Main Page Title</div>
+            <h1 class="ast-demo-heading">The Quick Brown Fox Jumps Over the Lazy Dog</h1>
+            <div class="ast-typography-info">
+              <code>@include spacing(padding, 60, 0, 32);</code>
+              <span class="ast-typography-specs"
+                >32px(@sm), 40px(@md) and 48px(@lg) top padding and 24px(@sm), 32px(@md) and 40px(@lg) bottom padding.</span
+              >
+            </div>
+          </div>
+
+          <div class="ast-typography-example">
+            <div class="ast-typography-label">H2 - Section Heading</div>
+            <h2 class="ast-demo-heading">The Quick Brown Fox Jumps Over the Lazy Dog</h2>
+            <div class="ast-typography-info">
+              <code>@include spacing(padding, 24, 0);</code>
+              <span class="ast-typography-specs">24px vertical padding, responsive across breakpoints</span>
+            </div>
+          </div>
+
+          <div class="ast-typography-example">
+            <div class="ast-typography-label">H3 - Subsection Heading</div>
+            <h3 class="ast-demo-heading">The Quick Brown Fox Jumps Over the Lazy Dog</h3>
+            <div class="ast-typography-info">
+              <code>@include spacing(padding, 20, 0);</code>
+              <span class="ast-typography-specs">20px vertical padding, responsive across breakpoints</span>
+            </div>
+          </div>
+
+          <div class="ast-typography-example">
+            <div class="ast-typography-label">H4 - Minor Heading</div>
+            <h4 class="ast-demo-heading">The Quick Brown Fox Jumps Over the Lazy Dog</h4>
+            <div class="ast-typography-info">
+              <code>@include spacing(padding, 16, 0);</code>
+              <span class="ast-typography-specs">16px vertical padding, responsive across breakpoints</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-typography-section">
+        <h2 class="ast-typography-section__title">Paragraph Examples</h2>
+
+        <div class="ast-typography-examples">
+          <div class="ast-typography-example">
+            <div class="ast-typography-label">Standard Paragraph</div>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+              ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+              fugiat nulla pariatur.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+              ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+              fugiat nulla pariatur.
+            </p>
+            <div class="ast-typography-info">
+              <code>font-size: var(--md);</code>
+              <span class="ast-typography-specs">Standard body text, responsive font size</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-typography-section">
+        <h2 class="ast-typography-section__title">Lists and Links</h2>
+
+        <div class="ast-typography-examples">
+          <div class="ast-typography-example">
+            <div class="ast-typography-label">Unordered List (ul)</div>
+            <ul>
+              <li>First item in the list with some descriptive content</li>
+              <li>
+                Second item that demonstrates nested structure:
+                <ul>
+                  <li>Nested item one</li>
+                  <li>Nested item two</li>
+                  <li>Nested item three with <a href="#">inline link example</a></li>
+                </ul>
+              </li>
+              <li>Third item with more content</li>
+              <li>Final item to show list spacing</li>
+            </ul>
+            <div class="ast-typography-info">
+              <code>ul &#123; margin: 1rem 0; &#125;</code>
+              <span class="ast-typography-specs">Standard bulleted list with consistent spacing and nested support</span
+              >
+            </div>
+          </div>
+
+          <div class="ast-typography-example">
+            <div class="ast-typography-label">Ordered List (ol)</div>
+            <ol>
+              <li>First step in the process or procedure</li>
+              <li>Second step with detailed explanation of the action required</li>
+              <li>
+                Third step that includes a nested ordered list:
+                <ol>
+                  <li>Sub-step A with specific instructions</li>
+                  <li>Sub-step B referencing <a href="#">additional resources</a></li>
+                  <li>Sub-step C for completion</li>
+                </ol>
+              </li>
+              <li>Fourth step continuing the main sequence</li>
+              <li>Final step to conclude the process</li>
+            </ol>
+            <div class="ast-typography-info">
+              <code>ol &#123; margin: 1rem 0; counter-reset: item; &#125;</code>
+              <span class="ast-typography-specs">Numbered list with automatic counter and nested numbering support</span
+              >
+            </div>
+          </div>
+
+          <div class="ast-typography-example">
+            <div class="ast-typography-label">Inline Links in Paragraphs</div>
+            <p>
+              This paragraph demonstrates how <a href="#">inline anchor tags</a> integrate seamlessly within flowing text.
+              Links should be easily identifiable while maintaining <a href="/typography">good readability</a> throughout
+              the content. Multiple links can appear in the same paragraph, such as references to <a
+                href="#external"
+                target="_blank"
+                rel="noopener">external resources</a
+              >
+              or <a href="/internal-page">internal navigation</a> within the site structure.
+            </p>
+            <p>
+              Additional paragraph showing link behavior in different contexts. Links can reference
+              <a href="mailto:example@domain.com">email addresses</a>, <a href="tel:+1234567890">phone&nbsp;numbers</a>,
+              or <a href="https://example.com" target="_blank" rel="noopener">external websites</a>. The design system
+              ensures consistent styling across all link types while maintaining accessibility standards.
+            </p>
+            <div class="ast-typography-info">
+              <code>a &#123; color: var(--primary-color); text-decoration: underline; &#125;</code>
+              <span class="ast-typography-specs"
+                >Accessible inline links with hover states and external link indicators</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-typography-section">
+        <h2 class="ast-typography-section__title">Usage Examples</h2>
+        <pre
+          class="ast-code-example"><code>{`/* Typography with Spacing System */
+@use "../../styles/core/spacing.core" as *;
+
+// Heading styles with consistent spacing
+h1 {
+  @include spacing(padding, 32, 0);  // Large vertical spacing
+  font-size: var(--h1);
+}
+
+h2 {
+  @include spacing(padding, 24, 0);  // Medium vertical spacing  
+  font-size: var(--h2);
+}
+
+h3 {
+  @include spacing(padding, 20, 0);  // Smaller vertical spacing
+  font-size: var(--h3);
+}
+
+h4 {
+  @include spacing(padding, 16, 0);  // Minimal vertical spacing
+  font-size: var(--h4);
+}
+
+// Custom spacing for specific contexts
+.hero-title {
+  @include spacing(padding, 48, 0);  // Extra large spacing
+}
+
+.compact-heading {
+  @include spacing(padding, 8, 0);   // Tight spacing
+}`}</code></pre>
+      </section>
+    </AstTray>
+  </Fragment>
+</Layout>
+
+<style lang="scss">
+  .ast-typography-controls {
+    background: var(--neutral-50, #f4f0eb);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--neutral-200, #c1b2a5);
+    margin: 2rem 0;
+  }
+
+  .ast-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .ast-toggle-input {
+    display: none;
+  }
+
+  .ast-toggle-slider {
+    position: relative;
+    width: 50px;
+    height: 24px;
+    background: var(--neutral-300, #7b6f60);
+    border-radius: 24px;
+    transition: background-color 0.3s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .ast-toggle-input:checked + .ast-toggle-slider {
+    background: var(--teal-200, #009999);
+
+    &::before {
+      transform: translateX(26px);
+    }
+  }
+
+  .ast-toggle-description {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--neutral-400, #615546);
+    margin-bottom: 0;
+  }
+
+  .ast-typography-section__title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--neutral-800, #000);
+    border-bottom: 2px solid var(--neutral-100, #e4dcd3);
+    padding-bottom: 0.5rem;
+  }
+
+  .ast-typography-examples {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .ast-typography-example {
+    border: 1px solid var(--neutral-200, #c1b2a5);
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+  }
+
+  .ast-typography-label {
+    background: var(--neutral-100, #e4dcd3);
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    color: var(--neutral-600, #363639);
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--neutral-200, #c1b2a5);
+  }
+
+  .ast-demo-heading {
+    margin: 0;
+    transition: background-color 0.3s ease;
+    position: relative;
+  }
+
+  .ast-typography-info {
+    padding: 1rem 1.5rem;
+    background: var(--neutral-50, #f4f0eb);
+    border-top: 1px solid var(--neutral-200, #c1b2a5);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    code {
+      font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+      background: var(--neutral-800, #000);
+      color: var(--neutral-50, #f4f0eb);
+      padding: 0.5rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+  }
+
+  .ast-typography-specs {
+    font-size: 0.85rem;
+    color: var(--neutral-400, #615546);
+  }
+
+  .ast-code-example {
+    background: var(--neutral-800, #000);
+    color: var(--neutral-50, #f4f0eb);
+    padding: 1.5rem;
+    border-radius: 8px;
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-x: auto;
+
+    code {
+      color: inherit;
+      background: none;
+      padding: 0;
+    }
+  }
+
+  /* Padding Visualization Styles */
+  .ast-demo-heading {
+    position: relative;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: rgba(164, 157, 222, 0.4);
+      pointer-events: none;
+      z-index: 1;
+      box-sizing: border-box;
+      opacity: 0;
+      transform: scaleY(0);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: top;
+    }
+
+    &::before {
+      top: 0;
+      height: var(--computed-padding-top, 0px);
+    }
+
+    &::after {
+      bottom: 0;
+      height: var(--computed-padding-bottom, 0px);
+      transform-origin: bottom;
+    }
+  }
+
+  .show-padding {
+    .ast-demo-heading {
+      &::before,
+      &::after {
+        opacity: 1;
+        transform: scaleY(1);
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ast-typography-examples {
+      gap: 2rem;
+    }
+
+    .ast-typography-example {
+      margin: 0 -1rem;
+    }
+
+    .ast-toggle-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  // Local script for padding visualization toggle with cookie persistence
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("paddingToggle") as HTMLInputElement;
+    const demoSection = document.getElementById("typographyDemo");
+    const COOKIE_NAME = "ast-typography-padding-toggle";
+    const COOKIE_EXPIRY_DAYS = 30;
+
+    // Cookie helper functions
+    function setCookie(name: string, value: string, days: number) {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+      document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+    }
+
+    function getCookie(name: string): string | null {
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ") c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    }
+
+    function updatePaddingVisualization() {
+      const headings = demoSection?.querySelectorAll(".ast-demo-heading") as NodeListOf<HTMLElement>;
+
+      headings?.forEach((heading) => {
+        const computedStyle = window.getComputedStyle(heading);
+        const paddingTop = computedStyle.paddingTop;
+        const paddingBottom = computedStyle.paddingBottom;
+
+        // Apply the computed padding values to the pseudo-elements via CSS custom properties
+        heading.style.setProperty("--computed-padding-top", paddingTop);
+        heading.style.setProperty("--computed-padding-bottom", paddingBottom);
+      });
+    }
+
+    function applyToggleState(isChecked: boolean) {
+      if (isChecked) {
+        demoSection?.classList.add("show-padding");
+        updatePaddingVisualization();
+      } else {
+        demoSection?.classList.remove("show-padding");
+      }
+    }
+
+    if (toggle && demoSection) {
+      // Load saved state from cookie
+      const savedState = getCookie(COOKIE_NAME);
+      if (savedState !== null) {
+        const isChecked = savedState === "true";
+        toggle.checked = isChecked;
+        applyToggleState(isChecked);
+      }
+
+      // Handle toggle changes
+      toggle.addEventListener("change", function () {
+        const isChecked = toggle.checked;
+        applyToggleState(isChecked);
+        setCookie(COOKIE_NAME, isChecked.toString(), COOKIE_EXPIRY_DAYS);
+      });
+    }
+  });
+</script>

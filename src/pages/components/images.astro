@@ -1,0 +1,41 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+
+import AstImage from "@/components/Image/AstImage.astro";
+---
+
+<Layout title="Astriata Boilerplate" pageClass="ast-centered-page" layoutType="centered">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="centered-content">
+    <AstTray>
+      <h1>AstImage Component Demo</h1>
+      <p>Examples of the AstImage component with different configurations:</p>
+
+      <h2>Basic Image (16:9 aspect ratio)</h2>
+      <AstImage src="image1.jpg" alt="Sample image 1" />
+
+      <h2>Square Image (1:1 aspect ratio)</h2>
+      <AstImage src="image2.jpg" alt="Sample image 2" aspectRatio="1/1" class="ast-w--300" />
+
+      <h2>Square Image (1:1 aspect ratio) | Lazy Loading</h2>
+      <AstImage src="image2.jpg" alt="Sample image 2" aspectRatio="1/1" class="ast-w--300" loading="lazy" />
+
+      <h2>Wide Image (21:9 aspect ratio)</h2>
+      <AstImage src="image3.jpg" alt="Sample image 3" aspectRatio="21/9" class="ast-w--500" />
+
+      <h2>Portrait Image (3:4 aspect ratio) | Object Position: Top</h2>
+      <AstImage src="image4.jpg" alt="Sample image 4" aspectRatio="3/4" class="ast-w--500" objectPosition="top" />
+
+      <h2>Portrait Image (3:4 aspect ratio) | Object Fit: Contain | Object Position: Center</h2>
+      <AstImage
+        src="image4.jpg"
+        alt="Sample image 4"
+        aspectRatio="3/4"
+        class="ast-outline--warning ast-w--500"
+        objectFit="contain"
+        objectPosition="center"
+      />
+    </AstTray>
+  </Fragment>
+</Layout>

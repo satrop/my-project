@@ -1,0 +1,15 @@
+@use "../tokens/typography/typography-vars" as *;
+
+// Generate CSS custom properties
+:root {
+
+  // Font families
+  @each $name, $stack in $font-stacks {
+    --font-#{$name}: #{$stack};
+  }
+
+  // Font sizes
+  @each $name, $size in $fs {
+    --#{$name}: #{$size};
+  }
+}

@@ -1,0 +1,123 @@
+---
+import { asset } from "@/utils/assets";
+
+// Navigation and Footer components
+import Nav from "@/components/Nav/Nav.astro";
+import Footer from "@/components/Footer/Footer.astro";
+
+// Alert
+// import Alert from "@/components/Alert/Alert.astro";
+
+interface Props {
+  title?: string;
+  pageClass?: string;
+  loggedIn?: boolean;
+  showAlert?: boolean;
+  showHero?: boolean;
+  layoutType?: "centered" | "left-sidebar" | "right-sidebar";
+  sidebarPosition?: "left" | "right";
+  mainColumnClass?: string;
+  sidebarColumnClass?: string;
+  asideClass?: string;
+
+  asideColor?: string;
+}
+
+const {
+  title = "Default Title",
+  pageClass = "",
+  loggedIn = false,
+  showAlert = false,
+  showHero = false,
+  layoutType = "right-sidebar", // Default to right sidebar layout
+  asideClass = "",
+} = Astro.props as Props;
+import "@/styles/main.scss";
+import "@/styles/swiper-imports.css";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href={asset("favicon.svg")} />
+
+    <!-- Icon Font -->
+    <link rel="stylesheet" href={asset("assets/fonts/icons/font-icons.css")} />
+
+    <!-- Fonts -->
+  </head>
+  <body class:list={`ast-page-grid ${pageClass ? ` ${pageClass}` : ""}`}>
+    <!-- Dialogs slot -->
+    <slot name="dialogs" />
+    
+    <!-- Alert section (optional) -->
+    {showAlert && (
+      <div class="alert-container">
+        <!-- <Alert /> -->
+        <div class="alert-placeholder">Alert component placeholder</div>
+      </div>
+    )}
+
+    <!-- Navigation -->
+    <Nav loggedIn={loggedIn} />
+
+    <!-- Hero Section (optional) -->
+    {showHero && (
+      <section class="hero-section">
+        <slot name="hero">
+          <div class="hero-placeholder">
+            <h1>Hero Section Placeholder</h1>
+            <p>This is where your hero content will go.</p>
+          </div>
+        </slot>
+      </section>
+    )}
+
+    <!-- Main Content Area -->
+    <main id="main">
+      {layoutType === "centered" && (
+
+        <div class="ast-grid-wrapper">
+
+            <slot name="centered-content" />
+
+        </div>
+      )}
+
+      {layoutType === "right-sidebar" && (
+
+        <div class="ast-grid-wrapper ast-grid-wrapper--right-sidebar">
+          <!-- Main Content -->
+          <slot name="main-content" />
+
+          <!-- Right Sidebar -->
+          <aside class:list={["ast-right-column", asideClass]}>
+            <slot name="right-content" />
+          </aside>
+        </div>
+      )}
+
+      {layoutType === "left-sidebar" && (
+
+        <div class="ast-grid-wrapper ast-grid-wrapper--left-sidebar">
+          <!-- Left Sidebar -->
+          <aside class:list={["ast-left-column", asideClass]}>
+            <slot name="left-content" />
+          </aside>
+
+          <!-- Main Content -->
+          <slot name="main-content" />
+        </div>
+      )}
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+  </body>
+</html>
+
+
+<script type="module" src={asset("assets/js/main.js")}></script>

@@ -1,0 +1,877 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { colorData, getColorName } from "@/data/color-data";
+import { checkContrast, getContrastRating, getContrastRatingColor } from "@/utils/contrastChecker";
+
+import AstTray from "@/components/AstTray/AstTray.astro";
+
+// Build a flat list of all colors for cross-checking
+const allColors = colorData.flatMap((group) =>
+  group.shades.map((shade) => ({
+    name: `${group.displayName} ${shade.shade}`,
+    value: shade.value,
+    groupName: group.displayName,
+    shade: shade.shade,
+  }))
+);
+---
+
+<Layout title="Color System" pageClass="ast-centered-page" layoutType="centered">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="centered-content">
+    <AstTray className="ast-color-demo-header">
+      <h1>Color System</h1>
+      <p>
+        Our design system includes {colorData.length} color families with {
+          colorData.reduce((total, group) => total + group.shades.length, 0)
+        } total shades.
+      </p>
+    </AstTray>
+
+    <AstTray>
+      {
+        colorData && colorData.length > 0 ? (
+          colorData.map((colorGroup) => (
+            <section class="ast-color-group">
+              <h2 class="ast-color-group__title">{colorGroup.displayName}</h2>
+
+              <div class="ast-color-swatches">
+                {colorGroup.shades.map((shade) => {
+                  return (
+                    <div class="ast-color-swatch">
+                      <div class="ast-color-swatch__preview" style={`background-color: ${shade.value}`} />
+                      <div class="ast-color-swatch__info">
+                        <div class="ast-color-swatch__shade">{shade.cssVar.replace(`--${colorGroup.name}-`, "")}</div>
+                        <div class="ast-color-swatch__value">{shade.value}</div>
+                        <div class="ast-color-swatch__class">.{shade.className}</div>
+                        <div class="ast-color-swatch__var">{shade.cssVar}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div class="ast-color-usage">
+                <h3>CSS Usage Examples</h3>
+                <pre class="ast-code-example">
+                  <code>{`
+/* Background classes */
+${colorGroup.shades
+  .slice(0, 2)
+  .map((shade) => `.${shade.className} { background-color: ${shade.value}; }`)
+  .join("\n")}
+
+/* CSS Custom Properties */
+:root {
+${colorGroup.shades
+  .slice(0, 2)
+  .map((shade) => `  ${shade.cssVar}: ${shade.value};`)
+  .join("\n")}
+}
+
+/* Using in your styles */
+.my-element {
+  background-color: var(${colorGroup.shades[0].cssVar});
+}`}</code>
+                </pre>
+              </div>
+            </section>
+          ))
+        ) : (
+          <div class="ast-no-colors">
+            <p>No color data available. Make sure to run 'pnpm run colors:sync' first.</p>
+          </div>
+        )
+      }
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-color-section">
+        <h2 class="ast-color-section__title">Complete Color Contrast Matrix</h2>
+        <p>This matrix shows contrast ratios between all color combinations in your palette.</p>
+
+        <div class="ast-contrast-matrix-wrapper">
+          <div class="ast-contrast-matrix" style={`--color-count: ${allColors.length}`}>
+            {/* Header row */}
+            <div class="ast-matrix-header-corner"></div>
+            {
+              allColors.map((color) => (
+                <div class="ast-matrix-header-col" title={color.name}>
+                  <div class="ast-matrix-color-preview" style={`background-color: ${color.value}`} />
+                  <span class="ast-matrix-color-label">
+                    {color.groupName} {color.shade}
+                  </span>
+                </div>
+              ))
+            }
+
+            {/* Color rows */}
+            {
+              allColors.map((rowColor) => (
+                <>
+                  <div class="ast-matrix-header-row" title={rowColor.name}>
+                    <div class="ast-matrix-color-preview" style={`background-color: ${rowColor.value}`} />
+                    <span class="ast-matrix-color-label">
+                      {rowColor.groupName} {rowColor.shade}
+                    </span>
+                  </div>
+
+                  {allColors.map((colColor) => {
+                    const contrast = checkContrast(rowColor.value, colColor.value);
+                    const isSameColor = rowColor.value === colColor.value;
+
+                    return (
+                      <div
+                        class={`ast-matrix-cell ${isSameColor ? "ast-matrix-cell--same" : ""}`}
+                        title={`${rowColor.name} on ${colColor.name}: ${contrast.ratio}:1`}
+                        data-ratio={contrast.ratio}>
+                        <div class="ast-matrix-cell__ratio">{contrast.ratio}</div>
+                        <div class="ast-matrix-cell__badges">
+                          {contrast.AAA && (
+                            <span class="ast-matrix-mini-badge" data-level="aaa">
+                              AAA
+                            </span>
+                          )}
+                          {contrast.AA && !contrast.AAA && (
+                            <span class="ast-matrix-mini-badge" data-level="aa">
+                              AA
+                            </span>
+                          )}
+                          {contrast.AAALarge && !contrast.AAA && (
+                            <span class="ast-matrix-mini-badge" data-level="aaa-large">
+                              AAA-L
+                            </span>
+                          )}
+                          {contrast.AALarge && !contrast.AA && (
+                            <span class="ast-matrix-mini-badge" data-level="aa-large">
+                              AA-L
+                            </span>
+                          )}
+                          {!contrast.AALarge && !isSameColor && (
+                            <span class="ast-matrix-mini-badge" data-level="fail">
+                              ✗
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="ast-design-notes">
+          <h3>Matrix Legend</h3>
+          <div class="ast-matrix-legend">
+            <div class="ast-matrix-legend-item">
+              <span class="ast-matrix-mini-badge" data-level="aaa">AAA</span>
+              <span class="ast-matrix-legend-text">Passes AAA for normal text (7:1+)</span>
+            </div>
+            <div class="ast-matrix-legend-item">
+              <span class="ast-matrix-mini-badge" data-level="aa">AA</span>
+              <span class="ast-matrix-legend-text">Passes AA for normal text (4.5:1+)</span>
+            </div>
+            <div class="ast-matrix-legend-item">
+              <span class="ast-matrix-mini-badge" data-level="aaa-large">AAA-L</span>
+              <span class="ast-matrix-legend-text">Passes AAA for large/bold text (4.5:1+)</span>
+            </div>
+            <div class="ast-matrix-legend-item">
+              <span class="ast-matrix-mini-badge" data-level="aa-large">AA-L</span>
+              <span class="ast-matrix-legend-text">Passes AA for large/bold text (3:1+)</span>
+            </div>
+            <div class="ast-matrix-legend-item">
+              <span class="ast-matrix-mini-badge" data-level="fail">✗</span>
+              <span class="ast-matrix-legend-text">Does not meet minimum standards</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-color-section">
+        <h2 class="ast-color-section__title">Design Team Guidelines</h2>
+        <p>
+          Before colors can be processed by the development pipeline, they need to be prepared according to these
+          specifications:
+        </p>
+
+        <div class="ast-build-steps">
+          <div class="ast-build-step">
+            <div class="ast-build-number">1</div>
+            <div class="ast-build-content">
+              <h4>Define Color Palettes</h4>
+              <p>
+                Create comprehensive color palettes with multiple shades (25, 50, 100, 200, etc.) for each color family.
+                Ensure proper contrast ratios for accessibility compliance.
+              </p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">2</div>
+            <div class="ast-build-content">
+              <h4>Organize by Families</h4>
+              <p>
+                Group colors into logical families (neutral, primary, secondary, etc.). Each family should have
+                consistent naming and shade progressions.
+              </p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">3</div>
+            <div class="ast-build-content">
+              <h4>Provide Hex Values</h4>
+              <p>
+                Supply exact hex color values for each shade. Ensure colors work in both light and dark contexts where
+                applicable.
+              </p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">4</div>
+            <div class="ast-build-content">
+              <h4>Document Usage Guidelines</h4>
+              <p>
+                Specify which colors should be used for text, backgrounds, borders, and interactive elements. Include
+                accessibility notes and contrast requirements.
+              </p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">5</div>
+            <div class="ast-build-content">
+              <h4>Handoff to Development</h4>
+              <p>
+                Provide organized color specifications to the front-end team. The FEDs will implement colors into the
+                SCSS system and generate the automated documentation.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ast-design-notes">
+          <h3>Design Notes</h3>
+          <ul>
+            <li>
+              <strong>Accessibility:</strong> Ensure all color combinations meet WCAG 2.1 AA contrast requirements
+            </li>
+            <li><strong>Consistency:</strong> Maintain consistent shade progressions across all color families</li>
+            <li>
+              <strong>Context:</strong> Consider how colors will appear on different backgrounds and in various UI states
+            </li>
+            <li>
+              <strong>Scalability:</strong> Design color systems that can accommodate future brand or theme variations
+            </li>
+          </ul>
+        </div>
+      </section>
+    </AstTray>
+
+    <AstTray>
+      <section class="ast-color-section">
+        <h2 class="ast-color-section__title">Development Build Process</h2>
+        <p>Once design-ready color specifications are provided, colors are processed through an automated pipeline:</p>
+
+        <div class="ast-build-steps">
+          <div class="ast-build-step">
+            <div class="ast-build-number">1</div>
+            <div class="ast-build-content">
+              <h4>Update SCSS File</h4>
+              <p>Add colors to the <code>$colors</code> map in <code>src/styles/tokens/colors/_colors.scss</code></p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">2</div>
+            <div class="ast-build-content">
+              <h4>Sync Colors</h4>
+              <p>Run <code>pnpm run colors:sync</code> - Parses SCSS and generates TypeScript data files</p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">3</div>
+            <div class="ast-build-content">
+              <h4>Generate CSS Classes</h4>
+              <p>Creates utility classes and CSS custom properties for all color values automatically</p>
+            </div>
+          </div>
+
+          <div class="ast-build-step">
+            <div class="ast-build-number">4</div>
+            <div class="ast-build-content">
+              <h4>Update Documentation</h4>
+              <p>This color showcase page automatically updates to reflect the new color system</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ast-code-section">
+          <h3>Development Commands</h3>
+          <div class="ast-code-example">
+            <code>pnpm run colors:sync</code>
+            <p>Synchronizes colors from SCSS to TypeScript data files</p>
+            <br />
+            <code>pnpm run colors:watch</code>
+            <p>Watches for SCSS changes and auto-syncs colors during development</p>
+            <br />
+            <code>pnpm run dev:with-colors</code>
+            <p>Starts development server with color watching enabled</p>
+          </div>
+        </div>
+      </section>
+    </AstTray>
+  </Fragment>
+</Layout>
+
+<!-- 
+Do not use 'on page scss other than here'. Astro will add hex classes to scss to avoid collisions 
+and this makes BED bigly mad! This page will not be shipped to production so it's ok to have styles here.
+-->
+<style lang="scss">
+  .ast-color-demo-header {
+    margin-block: 2rem;
+  }
+  .ast-color-demo {
+    padding: 2rem 0;
+    min-height: 100vh;
+  }
+
+  .ast-color-demo__header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--color-neutral-800, #000);
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: var(--color-neutral-400, #615546);
+    }
+  }
+
+  .ast-color-demo__grid {
+    display: grid;
+    gap: 4rem;
+  }
+
+  .ast-color-group {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+    + .ast-color-group {
+      margin-top: 4rem;
+    }
+  }
+
+  .ast-color-group__title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--color-neutral-800, #000);
+    border-bottom: 2px solid var(--color-neutral-100, #e4dcd3);
+    padding-bottom: 0.5rem;
+  }
+
+  .ast-color-swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .ast-color-swatch {
+    border: 1px solid var(--color-neutral-200, #c1b2a5);
+    border-radius: 8px;
+    overflow: hidden;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .ast-color-swatch__preview {
+    height: 80px;
+    min-height: 80px;
+    position: relative;
+    margin-bottom: 0;
+    background: #f0f0f0; /* fallback background to make it visible even if color fails */
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      pointer-events: none;
+    }
+  }
+
+  .ast-color-swatch__info {
+    padding: 1rem;
+    background: white;
+  }
+
+  .ast-color-swatch__shade {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: var(--color-neutral-800, #000);
+  }
+
+  .ast-color-swatch__value {
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+    font-size: 0.9rem;
+    color: var(--color-neutral-600, #363639);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .ast-color-swatch__class,
+  .ast-color-swatch__var {
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+    font-size: 0.8rem;
+    color: var(--color-neutral-400, #615546);
+    margin-bottom: 0.25rem;
+    padding: 0.2rem 0.4rem;
+    background: var(--color-neutral-50, #f4f0eb);
+    border-radius: 4px;
+    border: 1px solid var(--color-neutral-100, #e4dcd3);
+  }
+
+  /* Contrast Matrix Styles */
+  .ast-contrast-matrix-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+    margin: 2rem 0;
+    border: 1px solid var(--color-neutral-200, #c1b2a5);
+    border-radius: 8px;
+    max-width: 100%;
+  }
+
+  .ast-contrast-matrix {
+    display: grid;
+    grid-template-columns: 140px repeat(var(--color-count), 100px);
+    gap: 1px;
+    background: var(--color-neutral-200, #c1b2a5);
+    min-width: max-content;
+    font-size: 0.85rem;
+    width: max-content;
+  }
+
+  .ast-matrix-header-corner {
+    background: var(--color-neutral-100, #e4dcd3);
+    position: sticky;
+    left: 0;
+    z-index: 3;
+  }
+
+  .ast-matrix-header-col {
+    background: var(--color-neutral-50, #f4f0eb);
+    padding: 0.75rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 100px;
+    width: 100px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .ast-matrix-header-row {
+    background: var(--color-neutral-50, #f4f0eb);
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    min-width: 140px;
+  }
+
+  .ast-matrix-color-preview {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid var(--color-neutral-200, #c1b2a5);
+    flex-shrink: 0;
+  }
+
+  .ast-matrix-color-label {
+    font-size: 0.75rem;
+    color: var(--color-neutral-600, #363639);
+    text-align: center;
+    line-height: 1.2;
+    word-break: keep-all;
+    white-space: nowrap;
+  }
+
+  .ast-matrix-header-row .ast-matrix-color-label {
+    text-align: left;
+  }
+
+  .ast-matrix-cell {
+    background: white;
+    padding: 0.75rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 80px;
+    min-width: 100px;
+    width: 100px;
+    cursor: help;
+    transition: background 0.2s ease;
+
+    &:hover:not(.ast-matrix-cell--same) {
+      background: var(--color-neutral-50, #f4f0eb);
+      box-shadow: 0 0 0 2px var(--color-teal-200, #009999);
+    }
+  }
+
+  .ast-matrix-cell--same {
+    background: var(--color-neutral-100, #e4dcd3);
+    opacity: 0.5;
+  }
+
+  .ast-matrix-cell__ratio {
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-neutral-800, #000);
+  }
+
+  .ast-matrix-cell__badges {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .ast-matrix-mini-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: white;
+    white-space: nowrap;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  .ast-matrix-mini-badge[data-level="aaa"] {
+    background-color: #00a854;
+  }
+
+  .ast-matrix-mini-badge[data-level="aa"] {
+    background-color: #1da1b2;
+  }
+
+  .ast-matrix-mini-badge[data-level="aaa-large"] {
+    background-color: #52c41a;
+  }
+
+  .ast-matrix-mini-badge[data-level="aa-large"] {
+    background-color: #f5a623;
+  }
+
+  .ast-matrix-mini-badge[data-level="fail"] {
+    background-color: #f5222d;
+  }
+
+  /* WCAG Guide Styles */
+  .ast-wcag-guide {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .ast-wcag-level {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .ast-wcag-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 100px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .ast-wcag-info {
+    flex: 1;
+  }
+
+  .ast-wcag-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--color-neutral-800, #000);
+    font-size: 1.1rem;
+  }
+
+  .ast-wcag-info p {
+    margin: 0;
+    color: var(--color-neutral-600, #363639);
+    line-height: 1.5;
+  }
+
+  /* Matrix Legend Styles */
+  .ast-matrix-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .ast-matrix-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .ast-matrix-legend-text {
+    color: var(--color-neutral-600, #363639);
+    line-height: 1.5;
+  }
+
+  .ast-color-usage {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-neutral-100, #e4dcd3);
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--color-neutral-800, #000);
+    }
+  }
+
+  .ast-code-example {
+    background: var(--color-neutral-800, #000);
+    color: var(--color-neutral-50, #f4f0eb);
+    padding: 1.5rem;
+    border-radius: 8px;
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-x: auto;
+
+    code {
+      color: inherit;
+      background: none;
+      padding: 0;
+    }
+  }
+
+  .ast-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+
+    @media (min-width: 768px) {
+      padding: 0 2rem;
+    }
+  }
+
+  .ast-no-colors {
+    text-align: center;
+    padding: 3rem;
+    background: var(--color-neutral-50, #f4f0eb);
+    border-radius: 8px;
+    border: 2px dashed var(--color-neutral-200, #c1b2a5);
+
+    p {
+      font-size: 1.2rem;
+      color: var(--color-neutral-400, #615546);
+    }
+  }
+
+  /* Build Process Styles */
+  .ast-color-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-top: 4rem;
+  }
+
+  .ast-color-section__title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--color-neutral-800, #000);
+    border-bottom: 2px solid var(--color-neutral-100, #e4dcd3);
+    padding-bottom: 0.5rem;
+  }
+
+  .ast-build-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .ast-build-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .ast-build-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: var(--color-teal-500, #1da1b2);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  .ast-build-content h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--color-neutral-800, #000);
+  }
+
+  .ast-build-content p {
+    margin: 0;
+    color: var(--color-neutral-600, #363639);
+  }
+
+  .ast-build-content code {
+    background: var(--color-neutral-100, #e4dcd3);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: var(--color-neutral-600, #363639);
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+  }
+
+  .ast-design-notes {
+    background: var(--color-neutral-50, #f4f0eb);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--color-teal-500, #1da1b2);
+    margin-top: 2rem;
+  }
+
+  .ast-design-notes h3 {
+    margin: 0 0 1rem 0;
+    color: var(--color-neutral-800, #000);
+  }
+
+  .ast-design-notes ul {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .ast-design-notes li {
+    margin-bottom: 0.75rem;
+    color: var(--color-neutral-600, #363639);
+    line-height: 1.5;
+  }
+
+  .ast-design-notes li:last-child {
+    margin-bottom: 0;
+  }
+
+  .ast-design-notes strong {
+    color: var(--color-neutral-800, #000);
+  }
+
+  .ast-code-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-neutral-100, #e4dcd3);
+  }
+
+  .ast-code-section h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-neutral-800, #000);
+  }
+
+  @media (max-width: 640px) {
+    .ast-color-swatches {
+      grid-template-columns: 1fr;
+    }
+
+    .ast-color-demo__header h1 {
+      font-size: 2rem;
+    }
+
+    .ast-color-group {
+      padding: 1.5rem;
+    }
+
+    .ast-color-section {
+      padding: 1.5rem;
+    }
+
+    .ast-build-step {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ast-wcag-level {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .ast-wcag-badge {
+      width: 100%;
+    }
+
+    .ast-contrast-matrix {
+      font-size: 0.85rem;
+    }
+
+    .ast-matrix-header-row,
+    .ast-matrix-header-col {
+      font-size: 0.7rem;
+    }
+
+    .ast-matrix-color-preview {
+      width: 24px;
+      height: 24px;
+    }
+  }
+</style>

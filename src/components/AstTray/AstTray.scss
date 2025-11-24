@@ -1,0 +1,36 @@
+.ast-tray {
+  position: relative;
+
+  // --------------------------------------------
+  // Background Variants
+  // --------------------------------------------
+
+  &--with-bg-image {
+    background-image: var(--tray-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    // Overlay for better text readability
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--tray-bg-overlay);
+      z-index: 1;
+    }
+
+    .ast-container {
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+  &--with-bg-color {
+    background-color: var(--tray-bg-color);
+  }
+
+}

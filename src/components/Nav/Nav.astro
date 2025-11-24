@@ -1,0 +1,10 @@
+---
+interface Props {
+  loggedIn?: boolean;
+  class?: string;
+}
+
+const { loggedIn = false, class: className = "" } = Astro.props;
+---
+
+<nav class={`ast-main-nav ${className}`}>--nav--</nav>

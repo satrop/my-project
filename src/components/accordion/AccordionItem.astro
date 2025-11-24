@@ -1,0 +1,39 @@
+---
+export interface Props {
+  id: string;
+  title: string;
+  content?: string;
+  htmlContent?: string;
+}
+
+const { id, title, content, htmlContent } = Astro.props;
+---
+
+<div class="ast-accordion__item" data-accordion-item data-expanded="false">
+  <h3 class="ast-accordion__header">
+    <button
+      class="ast-accordion__trigger"
+      type="button"
+      aria-expanded="false"
+      aria-controls={`ast-accordion-content-${id}`}
+      id={`ast-accordion-trigger-${id}`}
+      data-accordion-trigger>
+      <span class="ast-accordion__icon-wrapper">
+        <i class="icon icon-minus" aria-hidden="true"></i>
+        <i class="icon icon-plus" aria-hidden="true"></i>
+      </span>
+      <span class="ast-accordion__title">{title}</span>
+    </button>
+  </h3>
+
+  <div
+    class="ast-accordion__content"
+    id={`ast-accordion-content-${id}`}
+    aria-labelledby={`ast-accordion-trigger-${id}`}
+    role="region"
+    data-accordion-content>
+    <div class="ast-accordion__body" inert>
+      {htmlContent ? <div set:html={htmlContent} /> : content ? <p set:html={content} /> : <slot />}
+    </div>
+  </div>
+</div>

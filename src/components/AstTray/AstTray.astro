@@ -1,0 +1,97 @@
+---
+import { asset } from "@/utils/assets";
+
+export interface Props {
+  /**
+   * Tray width variant
+   * - 'regular': Default width
+   * - 'wide': Extends to wide boundaries
+   * - 'full': Extends to full viewport width
+   * - 'break-left': Breaks out to the left
+   * - 'break-right': Breaks out to the right
+   */
+  trayWidth?: "regular" | "wide" | "full" | "break-left" | "break-right";
+
+  /**
+   * Container width variant
+   * - 'main': Default main content width
+   * - 'wide': Wide content width
+   * - 'full': Full width content
+   */
+  containerWidth?: "main" | "wide" | "full";
+
+  /**
+   * Optional additional CSS class name
+   */
+  className?: string;
+
+  /**
+   * Background image filename (e.g., "hero-bg.jpg")
+   * Will span the full tray width
+   */
+  backgroundImage?: string;
+
+  /**
+   * Background color (any valid CSS color value)
+   * Will span the full tray width
+   */
+  backgroundColor?: string;
+
+  /**
+   * Background overlay opacity (0-1) for better text readability
+   * Only applies when backgroundImage is used
+   */
+  backgroundOverlay?: number;
+}
+
+const {
+  trayWidth = "regular",
+  containerWidth = "main",
+  className,
+  backgroundImage,
+  backgroundColor,
+  backgroundOverlay = 0.3,
+} = Astro.props;
+
+// Build tray classes
+const trayClasses = [
+  "ast-tray",
+  trayWidth === "wide" && "ast-tray--wide",
+  trayWidth === "full" && "ast-tray--full",
+  trayWidth === "break-right" && "ast-tray--break-right",
+  trayWidth === "break-left" && "ast-tray--break-left",
+  backgroundImage && "ast-tray--with-bg-image",
+  backgroundColor && "ast-tray--with-bg-color",
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+
+// Build container classes
+const containerClasses = [
+  "ast-container",
+  containerWidth === "main" && "ast-container--main",
+  containerWidth === "wide" && "ast-container--wide",
+  containerWidth === "full" && "ast-container--full",
+]
+  .filter(Boolean)
+  .join(" ");
+
+// Build background styles using CSS custom properties
+const backgroundStyles = [];
+if (backgroundImage) {
+  const bgImageUrl = asset(`img/${backgroundImage}`);
+  backgroundStyles.push(`--tray-bg-image: url('${bgImageUrl}')`);
+  backgroundStyles.push(`--tray-bg-overlay: rgba(0, 0, 0, ${backgroundOverlay})`);
+}
+if (backgroundColor) {
+  backgroundStyles.push(`--tray-bg-color: ${backgroundColor}`);
+}
+const backgroundStyle = backgroundStyles.join("; ");
+---
+
+<section class={trayClasses} style={backgroundStyle}>
+  <div class={containerClasses}>
+    <slot />
+  </div>
+</section>

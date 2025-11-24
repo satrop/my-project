@@ -1,0 +1,69 @@
+---
+/**
+ * ResourceAccordion - An Accordion component specifically designed to render ResourceItem components
+ * 
+ * Usage:
+ * import ResourceAccordion from "@/components/Accordion/ResourceAccordion.astro";
+ * import ResourceItemComponent from "@/components/ResourceItem/ResourceItem.astro";
+ * 
+ * <ResourceAccordion
+ *   items={[
+ *     { id: "1", title: "First Item", resourceProps: {...} },
+ *     { id: "2", title: "Second Item", resourceProps: {...} }
+ *   ]}
+ *   allowMultiple={true}
+ * />
+ */
+
+import ResourceItemComponent from "@/components/ResourceItem/ResourceItem.astro";
+import type { Props as ResourceItemProps } from "@/components/ResourceItem/ResourceItem.astro";
+
+export interface ResourceAccordionItem {
+  id: string;
+  title: string;
+  resourceProps: ResourceItemProps;
+}
+
+export interface Props {
+  items: ResourceAccordionItem[];
+  allowMultiple?: boolean;
+}
+
+const { items, allowMultiple = false } = Astro.props;
+---
+
+<article class="ast-accordion" data-allow-multiple={allowMultiple.toString()} data-js="accordion">
+  {
+    items.map((item) => (
+      <div class="ast-accordion__item" data-accordion-item data-expanded="false">
+        <div class="ast-h3">
+          <button
+            class="ast-accordion__trigger"
+            type="button"
+            aria-expanded="false"
+            aria-controls={`ast-accordion-content-${item.id}`}
+            id={`ast-accordion-trigger-${item.id}`}
+            data-accordion-trigger>
+            <div class="ast-accordion__icon-wrapper">
+              <i class="icon icon-minus" aria-hidden="true" />
+              <i class="icon icon-plus" aria-hidden="true" />
+            </div>
+            <div class="ast-accordion__title">{item.title}</div>
+          </button>
+        </div>
+
+        <div
+          class="ast-accordion__content ast-accordion__left"
+          id={`ast-accordion-content-${item.id}`}
+          aria-labelledby={`ast-accordion-trigger-${item.id}`}
+          role="region"
+          data-accordion-content>
+          <div class="ast-accordion__body" inert>
+            <ResourceItemComponent {...item.resourceProps} />
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</article>
+

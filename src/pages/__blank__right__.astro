@@ -1,0 +1,20 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+---
+
+<Layout title="[]" pageClass="ast-page-name" layoutType="right-sidebar" mainColumnClass="" sidebarColumnClass="">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="main-content">
+    <AstTray>
+      <h1>Centered Content Area</h1>
+      <p>Add your centered page content here...</p>
+    </AstTray>
+  </Fragment>
+  <Fragment slot="right-content">
+    <AstTray>
+      <h2>Right Sidebar Content</h2>
+      <p>Add your sidebar content here...</p>
+    </AstTray>
+  </Fragment>
+</Layout>

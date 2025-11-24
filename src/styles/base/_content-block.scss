@@ -1,0 +1,48 @@
+.ast-content-block:not(footer *) {
+
+  ul,
+  ol {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-left: 1em;
+    padding-left: 0;
+
+    li {
+      list-style-position: inside;
+      position: relative;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  ul {
+    list-style: none;
+
+    li {
+      display: flex;
+
+      &::before {
+        content: '';
+        display: block;
+        margin-top: 0.5em;
+        margin-right: 1rem;
+        width: 0.3em;
+        height: 0.3em;
+        // background-color: var(--teal-200);
+        border-radius: 50%;
+      }
+    }
+  }
+
+  ol {
+
+    li {
+      padding-left: 0;
+
+      // &::marker {
+      //   color: var(--rust-500);
+      // }
+    }
+  }
+}

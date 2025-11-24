@@ -1,0 +1,18 @@
+// ==========================================================================
+// Slide In Down Animation
+// ==========================================================================
+
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, calc(-1 * var(--distance)), 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.ast-animate__slideInDown {
+  animation-name: slideInDown;
+}
