@@ -1,0 +1,29 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AstTray from "@/components/AstTray/AstTray.astro";
+
+import FiftyFiftyComponent from "../../components/fiftyfifty/FiftyFifty.astro";
+---
+
+<Layout title="[]" pageClass="ast-centered-page" layoutType="centered">
+  <Fragment slot="hero"></Fragment>
+  <Fragment slot="centered-content">
+    <AstTray>
+      <FiftyFiftyComponent
+        variant="left"
+        image={{
+          src: "image1.jpg",
+          alt: "Beautiful landscape",
+        }}
+        eyebrow="Featured"
+        header="Beautiful Mountain Vista"
+        description="Experience the breathtaking beauty of nature with stunning mountain views that stretch as far as the eye can see."
+        button={{
+          text: "Explore More",
+          href: "#",
+          variant: "primary",
+        }}
+      />
+    </AstTray>
+  </Fragment>
+</Layout>

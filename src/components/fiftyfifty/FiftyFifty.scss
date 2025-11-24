@@ -1,0 +1,260 @@
+// ----------------------------------------------
+// FiftyFifty Component Styles
+// ----------------------------------------------
+.ast-fifty-fifty {
+  position: relative;
+  width: 100%;
+
+  // ----------------------------------------------
+  // Container and Layout
+  // ----------------------------------------------
+  &__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+    min-height: 400px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+      gap: 4rem;
+    }
+  }
+
+  // ----------------------------------------------
+  // Image Section
+  // ----------------------------------------------
+  &__image-section {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+
+    @media (min-width: 768px) {
+      min-height: 400px;
+    }
+  }
+
+  &__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--color-background-secondary, #f8f9fa);
+    border: 2px dashed var(--color-border, #e2e8f0);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__placeholder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: var(--color-text-muted, #6b7280);
+    text-align: center;
+
+    span {
+      color: var(--color-text-muted, #6b7280);
+    }
+
+    svg {
+      opacity: 0.5;
+    }
+
+    span {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+  }
+
+  // ----------------------------------------------
+  // Content Section
+  // ----------------------------------------------
+  &__content-section {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  &__content {
+    width: 100%;
+  }
+
+  &__eyebrow {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--theme-accent, #3b82f6);
+    margin-bottom: 0.75rem;
+  }
+
+  &__header {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-text, #1f2937);
+    margin: 0 0 1.5rem 0;
+
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+    }
+
+    @media (min-width: 1024px) {
+      font-size: 3rem;
+    }
+  }
+
+  &__description {
+    margin-bottom: 2rem;
+
+    p {
+      font-size: 1.125rem;
+      line-height: 1.7;
+      margin: 0 0 1rem 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__button-wrapper {
+    margin-top: 2rem;
+  }
+
+  // ----------------------------------------------
+  // Variant: Left (Image on left, content on right)
+  // ----------------------------------------------
+  &--left {
+    .ast-fifty-fifty__container {
+      @media (min-width: 768px) {
+        grid-template-areas: "image content";
+      }
+    }
+
+    .ast-fifty-fifty__image-section {
+      @media (min-width: 768px) {
+        grid-area: image;
+      }
+    }
+
+    .ast-fifty-fifty__content-section {
+      @media (min-width: 768px) {
+        grid-area: content;
+      }
+    }
+  }
+
+  // ----------------------------------------------
+  // Variant: Right (Content on left, image on right)
+  // ----------------------------------------------
+  &--right {
+    .ast-fifty-fifty__container {
+      @media (min-width: 768px) {
+        grid-template-areas: "content image";
+      }
+    }
+
+    .ast-fifty-fifty__image-section {
+      @media (min-width: 768px) {
+        grid-area: image;
+      }
+    }
+
+    .ast-fifty-fifty__content-section {
+      @media (min-width: 768px) {
+        grid-area: content;
+      }
+    }
+  }
+
+  // ----------------------------------------------
+  // Mobile Reverse Option
+  // ----------------------------------------------
+  &--reverse-mobile {
+    .ast-fifty-fifty__container {
+      @media (max-width: 767px) {
+        grid-template-rows: auto auto;
+
+        .ast-fifty-fifty__content-section {
+          order: 1;
+        }
+
+        .ast-fifty-fifty__image-section {
+          order: 2;
+        }
+      }
+    }
+  }
+}
+
+// ! --------------------------------------------
+// ! Do not edit ABOVE THIS LINE
+// ! --------------------------------------------
+
+// * --------------------------------------------
+// * Define custom styles below
+// * Use the "ast-" prefix to avoid conflicts
+// * --------------------------------------------
+
+.ast-fifty-fifty {
+  // Custom padding for sections
+  padding: 3rem 0;
+
+  @media (min-width: 768px) {
+    padding: 4rem 0;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 5rem 0;
+  }
+
+  // Enhanced image styling
+  &__image-wrapper {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  h2 {
+    padding: 0;
+    background-color: transparent;
+    color: blue;
+  }
+
+  &__eyebrow {
+    color: darkblue;
+  }
+
+  .ast-button {
+    background-color: blue;
+    color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: darkblue;
+      color: #fff;
+    }
+  }
+}

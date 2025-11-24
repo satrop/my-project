@@ -38,6 +38,11 @@ const siteLinks: SiteLinksData = {
       url: "components/accordion.html",
       className: "done",
     },
+    {
+      name: "50/50 Component",
+      url: "components/fifty-fifty.html",
+      className: "done",
+    },
   ],
 
   // Layout and design system components

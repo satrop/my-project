@@ -1,0 +1,91 @@
+---
+import { asset } from "@/utils/assets";
+
+export interface Props {
+  variant?: "left" | "right";
+  image?: {
+    src: string;
+    alt: string;
+  };
+  eyebrow?: string;
+  header?: string;
+  description?: string;
+  button?: {
+    text: string;
+    href: string;
+    variant?: "primary" | "secondary" | "link";
+  };
+  reverseOnMobile?: boolean;
+  class?: string;
+}
+
+const {
+  variant = "left",
+  image,
+  eyebrow,
+  header,
+  description,
+  button,
+  reverseOnMobile = false,
+  class: className = "",
+} = Astro.props;
+---
+
+<div
+  class={`ast-fifty-fifty ast-fifty-fifty--${variant} ${reverseOnMobile ? "ast-fifty-fifty--reverse-mobile" : ""} ${className}`}>
+  <div class="ast-fifty-fifty__container">
+    {/* Image Section */}
+    <div class="ast-fifty-fifty__image-section">
+      {
+        image ? (
+          <div class="ast-fifty-fifty__image-wrapper">
+            <img src={asset(`img/${image.src}`)} alt={image.alt} class="ast-fifty-fifty__image" />
+          </div>
+        ) : (
+          <div class="ast-fifty-fifty__image-placeholder">
+            <div class="ast-fifty-fifty__placeholder-content">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="2" />
+                <path d="M21 15l-5-5L5 21" stroke="currentColor" stroke-width="2" />
+              </svg>
+              <span>Image placeholder</span>
+            </div>
+          </div>
+        )
+      }
+    </div>
+
+    {/* Content Section */}
+    <div class="ast-fifty-fifty__content-section">
+      <div class="ast-fifty-fifty__content">
+        {eyebrow && <div class="ast-fifty-fifty__eyebrow">{eyebrow}</div>}
+
+        {header && <h2 class="ast-fifty-fifty__header">{header}</h2>}
+
+        {
+          description && (
+            <div class="ast-fifty-fifty__description">
+              <p>{description}</p>
+            </div>
+          )
+        }
+
+        {
+          button && (
+            <div class="ast-fifty-fifty__button-wrapper">
+              <a
+                href={button.href}
+                class={`ast-button ast-fifty-fifty__button ast-fifty-fifty__button--${button.variant || "primary"}`}>
+                {button.text}
+              </a>
+            </div>
+          )
+        }
+
+        {/* Slot for custom content */}
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
